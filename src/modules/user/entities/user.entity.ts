@@ -1,21 +1,33 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty } from '@nestjs/swagger';
-import { HydratedDocument } from 'mongoose';
+import { ApiProperty } from "@nestjs/swagger";
+import { BeforeInsert, Column } from "typeorm";
+import { PrimaryGeneratedColumn } from "typeorm/decorator/columns/PrimaryGeneratedColumn";
+import { Entity } from "typeorm/decorator/entity/Entity";
+import * as bcrypt from 'bcrypt';
 
-export type UserDocument = HydratedDocument<User>;
-
-@Schema()
+@Entity({ name: 'user' })
 export class User {
-    @Prop()
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
     @ApiProperty()
     email: string;
 
     @ApiProperty()
-    @Prop()
+    @Column()
     password: string;
 
+    @BeforeInsert()
+    async hashPassword() {
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+
+    async verifyPassword(password: string, hash: string) {
+        const isMatch = await bcrypt.compare(password, hash);
+        return isMatch;
+    }
+
     @ApiProperty()
-    @Prop()
+    @Column()
     username: string;
 }
-export const UserSchema = SchemaFactory.createForClass(User);

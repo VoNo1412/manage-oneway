@@ -1,15 +1,34 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { ManageCustomerModule } from './modules/manage-customer/manage-customer.module';
+import { ManageContractModule } from './modules/manage-contract/manage-contract.module';
+import { TypeOrmModule } from '@nestjs/typeorm/dist';
+import { ManageCustomer } from './modules/manage-customer/entities/manage-customer.entity';
+import { User } from './modules/user/entities/user.entity';
+import { ManageContract } from './modules/manage-contract/entities/manage-contract.entity';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://vono:1412@cluster0.rxvgowx.mongodb.net/?retryWrites=true&w=majority'),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '1234',
+      database: 'oneway',
+      entities: [
+          // __dirname + '/../**/*.entity{.ts,.js}',
+          User,
+          ManageCustomer,
+          ManageContract
+      ],
+      synchronize: true,
+    }),
     UserModule,
     AuthModule,
-    ManageCustomerModule
+    ManageCustomerModule,
+    ManageContractModule
   ],
 })
 export class AppModule { }

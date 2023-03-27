@@ -15,7 +15,9 @@ export class ManageCustomerController {
   @Body() createManageCustomerDto: CreateManageCustomerDto, 
   @Query('choose') chooseCustomer: string): Promise<IResponseDto<IManageCustomer>> {
     try {
-      const newCustomer: IManageCustomer = await this.manageCustomerService.create(createManageCustomerDto, chooseCustomer);
+      const newCustomer: IManageCustomer = await 
+      this.manageCustomerService.create(createManageCustomerDto, chooseCustomer);
+      
       return {
         status: HttpStatus.OK,
         data: newCustomer,
@@ -31,7 +33,8 @@ export class ManageCustomerController {
   }
 
   @Get()
-  async search(@Query() pageOption: IPaginationDto): Promise<IResponseDto<IPaginationDto>> {
+  async search(@Query() pageOption: IPaginationDto): 
+  Promise<IResponseDto<IPaginationDto>> {
     try {
       const customers: IPaginationDto = await this.manageCustomerService.findAll(pageOption);
 

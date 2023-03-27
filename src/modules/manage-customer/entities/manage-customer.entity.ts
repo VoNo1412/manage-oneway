@@ -1,8 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { HydratedDocument } from 'mongoose';
-
-export type ManageCustomerDocument = HydratedDocument<ManageCustomer>;
+import { PrimaryGeneratedColumn } from 'typeorm';
+import { Column } from 'typeorm/decorator/columns/Column';
+import { Entity } from 'typeorm/decorator/entity/Entity';
 
 export enum chooseCustomer {
     person = 'person',
@@ -10,91 +9,101 @@ export enum chooseCustomer {
     enterprise = 'enterprise'
 }
 
-@Schema()
+@Entity({ name: 'manage-customer' })
 export class ManageCustomer {
-    @Prop()
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column()
     @ApiProperty()
     name: string
 
-    @Prop()
+    @Column()
     @ApiProperty()
     sex: boolean
 
-    @Prop()
+    @Column()
     @ApiProperty()
     dateOfBirth: Date
 
-    @Prop()
+    @Column()
     @ApiProperty()
     phone1: string
 
-    @Prop()
+    @Column({ nullable: true })
     @ApiProperty()
     phone2: string
 
-    @Prop()
+    @Column({ nullable: true })
     @ApiProperty()
     phone3: string
 
-    @Prop()
+    @Column()
     @ApiProperty()
     married: boolean
 
-    @Prop()
+    @Column()
     @ApiProperty()
     income: number
 
-    @Prop()
+    @Column()
     @ApiProperty()
     familiarityLevel: string
 
-    @Prop()
+    @Column()
     @ApiProperty()
     job: string
 
-    @Prop()
+    @Column()
     @ApiProperty()
     enterprise: string
 
-    @Prop()
+    @Column()
     @ApiProperty()
     email: string
 
-    @Prop()
+    @Column()
     @ApiProperty()
     address: string
 
-    @Prop()
+    @Column()
     @ApiProperty()
     code: string
 
-    @Prop()
+    @Column()
     @ApiProperty()
     resource: string
 
-    @Prop()
+    @Column()
     @ApiProperty()
     relationship: string
 
-    @Prop()
+    @Column({nullable: true})
     @ApiProperty()
     other: string
 
-    @Prop({ Type: String, enum: chooseCustomer })
+    @Column({
+        type: 'enum',
+        enum: chooseCustomer,
+        default: chooseCustomer.person
+    })
     @ApiProperty()
     choose: string
 
-    @Prop()
+    @Column({ nullable: true })
     @ApiProperty()
     nameEnterprise: string
 
-    @Prop()
+    @Column({ nullable: true })
     @ApiProperty()
     phone: string
 
-    @Prop({ default: Date.now() })
+    @Column({
+        type: 'datetime',
+        default: () => 'CURRENT_TIMESTAMP',
+        nullable: true
+    })
     @ApiProperty()
     createdDate: Date
 }
 
-export const ManageCustomerSchema = SchemaFactory.createForClass(ManageCustomer);

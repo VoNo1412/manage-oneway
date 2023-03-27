@@ -3,7 +3,7 @@ import { IsNumber } from "class-validator";
 import { defaultValue, deleteObject } from "../helper/helper";
 
 export class IPaginationDto {
-    @Transform(({ value }) => defaultValue(value))
+    @Transform(({value}) => defaultValue(value))
     @IsNumber()
     size: number = 10;
 
@@ -21,6 +21,10 @@ export class IPaginationDto {
 
     @Transform(({ value }) => deleteObject(value))
     filter?: { [key: string]: any }
+
+    @Transform(({ value }) => Number(value))
+    @IsNumber()
+    sort?: number = -1;
 
     [key: string]: any;
 }

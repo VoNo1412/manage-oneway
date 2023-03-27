@@ -14,11 +14,10 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<IUserEntity> {
     const user: any = await this.userService.findUser(email);
-    const verifyPassword = await this.userService.verifyPassword(pass, user._doc.password);
-  
-    if (user && verifyPassword) {
+
+    if (user && await user.verifyPassword(pass, user.password)) {
       const { password, ...result } = user;
-      return result._doc;
+      return result;
     }
     return null;
   }

@@ -1,41 +1,77 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Builder } from 'builder-pattern';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
+import { Repository } from 'typeorm';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
-import { UpdateManageCustomerDto } from './dto/update-manage-customer.dto';
 import { chooseCustomer, ManageCustomer } from './entities/manage-customer.entity';
 import { IManageCustomer } from './interface/manage-customer.interface';
-
 @Injectable()
 export class ManageCustomerService {
-  constructor(@InjectModel(ManageCustomer.name) private readonly manageCustomerModel: Model<ManageCustomer>) { }
+  constructor(
+    @InjectRepository(ManageCustomer)
+    private readonly manageCustomerRepository: Repository<ManageCustomer>) { }
+  async create(
+    createManageCustomerDto: CreateManageCustomerDto,
+    chooseQuery: string): Promise<IManageCustomer> {
+    const { name,
+      sex,
+      dateOfBirth,
+      phone1,
+      phone2,
+      phone3,
+      married,
+      income,
+      familiarityLevel,
+      job,
+      enterprise,
+      email,
+      address,
+      code,
+      resource,
+      relationship } = createManageCustomerDto;
 
-  async create(createManageCustomerDto: CreateManageCustomerDto, choose: string): Promise<IManageCustomer> {
-    createManageCustomerDto.choose = choose;
-    const newCustomer = new this.manageCustomerModel(createManageCustomerDto);
+    const manageCustomerBuilder = Builder<IManageCustomer>()
+      .name(name)
+      .sex(sex)
+      .dateOfBirth(new Date(dateOfBirth))
+      .phone1(phone1)
+      .phone2(phone2)
+      .phone3(phone3)
+      .married(married)
+      .income(income)
+      .familiarityLevel(familiarityLevel)
+      .job(job)
+      .enterprise(enterprise)
+      .email(email)
+      .address(address)
+      .code(code)
+      .resource(resource)
+      .relationship(relationship)
+      .choose(chooseQuery)
+      .build()
 
-    newCustomer.dateOfBirth = new Date(createManageCustomerDto.dateOfBirth);
+    const newCustomer = await this.manageCustomerRepository.create(manageCustomerBuilder);
 
-    if (choose === chooseCustomer.enterprise) {
+    if (chooseQuery === chooseCustomer.enterprise) {
       newCustomer.nameEnterprise = createManageCustomerDto.nameEnterprise;
       newCustomer.phone = createManageCustomerDto.phone;
     }
 
-    newCustomer.save();
-
-    return newCustomer;
+    return this.manageCustomerRepository.save(newCustomer);
   }
 
   async findAll(pageOption: IPaginationDto): Promise<IPaginationDto> {
-    const total: number = await this.manageCustomerModel.count({});
+    const total: number = await this.manageCustomerRepository.count({});
+    total < pageOption.size ? pageOption.page = 1 : pageOption.page
+    const customers: IManageCustomer[] =
+      await this.manageCustomerRepository.find({
+        take: pageOption.size,
+        skip: pageOption.offset,
+        where: pageOption.filter,
+        order: { createdDate: pageOption.sort as any }
+      })
 
-    if(total < pageOption.size) {
-      pageOption.page = 1;
-    }
-
-    const customers: IManageCustomer[] = await this.manageCustomerModel.find(pageOption.filter).skip(pageOption.offset).limit(pageOption.size).sort({createdDate: pageOption.sort});
-    
     return {
       size: pageOption.size,
       page: pageOption.page,
@@ -44,16 +80,4 @@ export class ManageCustomerService {
       customers
     };
   }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} manageCustomer`;
-  // }
-
-  // update(id: number, updateManageCustomerDto: UpdateManageCustomerDto) {
-  //   return `This action updates a #${id} manageCustomer`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} manageCustomer`;
-  // }
 }

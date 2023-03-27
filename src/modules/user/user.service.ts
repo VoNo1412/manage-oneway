@@ -1,41 +1,37 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
-import * as bcrypt from 'bcrypt';
 import { IUserEntity } from './interface/user.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm/repository/Repository';
+import { Builder } from 'builder-pattern';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) { }
+  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) { }
 
   async createUser(createUserDto: CreateUserDto): Promise<IUserEntity> {
-    const { email, password } = createUserDto;
-    const checkExistUser = await this.userModel.findOne({ email });
+
+    const { email, password, username } = createUserDto;
+
+    const userBuilder = Builder<IUserEntity>()
+      .username(username)
+      .email(email)
+      .password(password)
+      .build();
+
+    const checkExistUser = await this.userRepository.findOneBy({ email })
+
     if (checkExistUser) {
       throw new HttpException('Already exist email!', HttpStatus.BAD_REQUEST);
     }
-    const hashPass = await this.hashPassword(password);
-    createUserDto.password = hashPass;
-    const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
-  }
-
-  async hashPassword(password: string): Promise<string> {
-    const saltOrRounds = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(password, saltOrRounds);
-    return hash;
-  }
-
-  async verifyPassword(password: string, hash: string) {
-    const isMatch = await bcrypt.compare(password, hash);
-    return isMatch;
+    const newUser = await this.userRepository.create(userBuilder);
+    return this.userRepository.save(newUser);
   }
 
   async findUser(email: string) {
-    const user = await this.userModel.findOne({ email });
+    const user = await this.userRepository.findOneBy({ email });
 
     if (!user) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);

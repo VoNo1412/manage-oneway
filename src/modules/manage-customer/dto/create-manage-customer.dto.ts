@@ -26,7 +26,7 @@ export class CreateManageCustomerDto {
     @IsString()
     @ApiProperty()
     @IsOptional()
-    phone2: string
+    phone2?: string
 
     @IsString()
     @ApiProperty()
