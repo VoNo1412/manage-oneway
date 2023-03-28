@@ -57,40 +57,20 @@ export class ManageCustomerController {
     }
   }
 
-  // @ApiConsumes('multipart/form-data')
-  // @ApiBody({
-  //   schema: {
-  //     type: 'object',
-  //     properties: {
-  //       file: {
-  //         type: 'string',
-  //         format: 'binary',
-  //       },
-  //     },
-  //   },
-  // })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './src/modules/manage-customer/uploads',
-      filename: (req, file, cb) => {
-        const originalName = file.originalname;
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const filename = `manage-customer-${uniqueSuffix}-${originalName}`;
-        cb(null, filename);
-      }
-    }),
-    limits: {
-      fileSize: 1000000 * 3 // max file size 1MB = 1000000 bytes
-    },
-    fileFilter(req, file, cb) {
-      if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls|txt|csv)$/)) {
-        return cb(new Error('Please check upload file again!'), false);
-      }
-      cb(undefined, true); // continue with upload
-    },
-
-  }))
+  @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: any) {
     console.log(file);
     // const workbook = XLSX.read(file.buffer, { type: 'buffer' });
