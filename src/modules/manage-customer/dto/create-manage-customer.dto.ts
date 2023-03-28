@@ -6,12 +6,12 @@ export class CreateManageCustomerDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    name: string
+    name?: string
 
     @ApiProperty()
     @IsOptional()
     @IsBoolean()
-    sex: boolean
+    sex?: boolean
 
     @IsString()
     @ApiProperty()
@@ -21,7 +21,7 @@ export class CreateManageCustomerDto {
     @IsString()
     @ApiProperty()
     @IsOptional()
-    phone1: string
+    phone1?: string
 
     @IsString()
     @ApiProperty()
@@ -31,75 +31,75 @@ export class CreateManageCustomerDto {
     @IsString()
     @ApiProperty()
     @IsOptional()
-    phone3: string
+    phone3?: string
 
     @ApiProperty()
     @IsOptional()
     @IsBoolean()
-    married: boolean
+    married?: boolean
 
     @ApiProperty()
     @IsOptional()
     @IsNumber()
-    income: number
+    income?: number
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    familiarityLevel: string
+    familiarityLevel?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    job: string
+    job?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    enterprise: string
+    enterprise?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    email: string
+    email?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    address: string
+    address?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    code: string
+    code?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    resource: string
+    resource?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    relationship: string
+    relationship?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    other: string
+    other?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    choose: string
+    choose?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    nameEnterprise: string
+    nameEnterprise?: string
 
     @IsString()
     @ApiProperty()
     @IsOptional()
-    phone: string
+    phone?: string
 }

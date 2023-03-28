@@ -18,15 +18,15 @@ export class ManageCustomer {
     @ApiProperty()
     name: string
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     sex: boolean
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     dateOfBirth: Date
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     phone1: string
 
@@ -38,35 +38,35 @@ export class ManageCustomer {
     @ApiProperty()
     phone3: string
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     married: boolean
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     income: number
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     familiarityLevel: string
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     job: string
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     enterprise: string
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     email: string
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     address: string
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     code: string
 
@@ -74,7 +74,7 @@ export class ManageCustomer {
     @ApiProperty()
     resource: string
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     relationship: string
 

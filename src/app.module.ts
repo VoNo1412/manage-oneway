@@ -15,13 +15,13 @@ import { ManageContract } from './modules/manage-contract/entities/manage-contra
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '1',
-      database: 'base_nest',
+      password: '1234',
+      database: 'oneway',
       entities: [
           // __dirname + '/../**/*.entity{.ts,.js}',
-          // User,
-          // ManageCustomer,
-          // ManageContract
+          User,
+          ManageCustomer,
+          ManageContract
       ],
       synchronize: true,
     }),

@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { chooseCustomer, ManageCustomer } from './entities/manage-customer.entity';
 import { IManageCustomer } from './interface/manage-customer.interface';
+import * as XLSX from 'xlsx';
+
 @Injectable()
 export class ManageCustomerService {
   constructor(
@@ -79,5 +81,44 @@ export class ManageCustomerService {
       total: total,
       customers
     };
+  }
+
+  async importFile(file: Express.Multer.File): Promise<any> {
+    const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const range = XLSX.utils.decode_range(worksheet['!ref']);
+    const data = [];
+    const db = [];
+    for (let row = range.s.r; row <= range.e.r; row++) {
+      const rowData = [];
+      for (let col = range.s.c; col <= range.e.c; col++) {
+        const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+        const cell = worksheet[cellAddress]
+        const value = cell ? cell.v : '';
+        rowData.push(value);
+      }
+
+      data.push(rowData);
+    }
+
+    const refactorData = async (data: string[]) => {
+      for (let i = 1; i < data.length; i++) {
+        const person: CreateManageCustomerDto = {};
+        for (let j = 0; j < data[i].length; j++) {
+          person[`${data[0][j]}`] = data[i][j]
+        }
+
+        // I don't know flow code and field 
+        const manageCustomerBuilder =  Builder<IManageCustomer>()
+        .name(person.name)
+        .resource(person.resource)
+        .build();
+
+        const newCustomer = await this.manageCustomerRepository.create(manageCustomerBuilder);
+        await this.manageCustomerRepository.save(newCustomer);
+      }
+    }
+
+    refactorData(data);
   }
 }
