@@ -1,23 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile, Header } from '@nestjs/common';
 import { ManageCustomerService } from './manage-customer.service';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { HttpStatus } from '@nestjs/common/enums';
 import { IResponseDto } from 'src/common/response/response.dto';
 import { IManageCustomer } from './interface/manage-customer.interface';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import * as XLSX from 'xlsx';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import * as Path from 'path';
+import { diskStorage } from 'multer';
 
 @Controller('manage-customer')
 export class ManageCustomerController {
-  constructor(private readonly manageCustomerService: ManageCustomerService) {}
+  constructor(private readonly manageCustomerService: ManageCustomerService) { }
 
   @Post()
   async create(
-  @Body() createManageCustomerDto: CreateManageCustomerDto, 
-  @Query('choose') chooseCustomer: string): Promise<IResponseDto<IManageCustomer>> {
+    @Body() createManageCustomerDto: CreateManageCustomerDto,
+    @Query('choose') chooseCustomer: string): Promise<IResponseDto<IManageCustomer>> {
     try {
-      const newCustomer: IManageCustomer = await 
-      this.manageCustomerService.create(createManageCustomerDto, chooseCustomer);
-      
+      const newCustomer: IManageCustomer = await
+        this.manageCustomerService.create(createManageCustomerDto, chooseCustomer);
+
       return {
         status: HttpStatus.OK,
         data: newCustomer,
@@ -33,8 +38,8 @@ export class ManageCustomerController {
   }
 
   @Get()
-  async search(@Query() pageOption: IPaginationDto): 
-  Promise<IResponseDto<IPaginationDto>> {
+  async search(@Query() pageOption: IPaginationDto):
+    Promise<IResponseDto<IPaginationDto>> {
     try {
       const customers: IPaginationDto = await this.manageCustomerService.findAll(pageOption);
 
@@ -50,5 +55,60 @@ export class ManageCustomerController {
         message: error.message
       }
     }
+  }
+
+  // @ApiConsumes('multipart/form-data')
+  // @ApiBody({
+  //   schema: {
+  //     type: 'object',
+  //     properties: {
+  //       file: {
+  //         type: 'string',
+  //         format: 'binary',
+  //       },
+  //     },
+  //   },
+  // })
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './src/modules/manage-customer/uploads',
+      filename: (req, file, cb) => {
+        const originalName = file.originalname;
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const filename = `manage-customer-${uniqueSuffix}-${originalName}`;
+        cb(null, filename);
+      }
+    }),
+    limits: {
+      fileSize: 1000000 * 3 // max file size 1MB = 1000000 bytes
+    },
+    fileFilter(req, file, cb) {
+      if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls|txt|csv)$/)) {
+        return cb(new Error('Please check upload file again!'), false);
+      }
+      cb(undefined, true); // continue with upload
+    },
+
+  }))
+  async uploadFile(@UploadedFile() file: any) {
+    console.log(file);
+    // const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+    // const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    // let range = XLSX.utils.decode_range(worksheet['!ref']);
+    // const data = [];
+
+    // for (let row = range.s.r; row <= range.e.r; row++) {
+    //   const rowData = [];
+
+    //   for (let col = range.s.c; col <= range.e.c; col++) {
+    //     const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+    //     const cell = worksheet[cellAddress];
+    //     const cellValue = cell ? cell.v : '';
+    //     rowData.push(cellValue);
+    //   }
+
+    //   data.push(rowData);
+    // }
   }
 }
