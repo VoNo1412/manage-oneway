@@ -102,6 +102,8 @@ export class ManageCustomerService {
     }
 
     const refactorData = async (data: string[]) => {
+      const promises = [];
+
       for (let i = 1; i < data.length; i++) {
         const person: CreateManageCustomerDto = {};
         for (let j = 0; j < data[i].length; j++) {
@@ -109,16 +111,23 @@ export class ManageCustomerService {
         }
 
         // I don't know flow code and field 
-        const manageCustomerBuilder =  Builder<IManageCustomer>()
-        .name(person.name)
-        .resource(person.resource)
-        .build();
+        const manageCustomerBuilder = Builder<IManageCustomer>()
+          .name(person.name)
+          .resource(person.resource)
+          .phone(person.phone1)
+          .build();
 
-        const newCustomer = await this.manageCustomerRepository.create(manageCustomerBuilder);
-        await this.manageCustomerRepository.save(newCustomer);
+        const newCustomer = this.manageCustomerRepository.create(manageCustomerBuilder);
+        db.push(newCustomer);
+        const resultCustomer = await this.manageCustomerRepository.save(newCustomer);
+        promises.push(this.manageCustomerRepository.save(resultCustomer));
       }
+
+      await Promise.all(promises);
     }
 
     refactorData(data);
+
+    return db;
   }
 }

@@ -15,7 +15,8 @@ export class ManageCustomerController {
   @Post()
   async create(
     @Body() createManageCustomerDto: CreateManageCustomerDto,
-    @Query('choose') chooseCustomer: string): Promise<IResponseDto<IManageCustomer>> {
+    @Query('choose') chooseCustomer: string): 
+    Promise<IResponseDto<IManageCustomer>> {
     try {
       const newCustomer: IManageCustomer = await
         this.manageCustomerService.create(createManageCustomerDto, chooseCustomer);
@@ -38,7 +39,8 @@ export class ManageCustomerController {
   async search(@Query() pageOption: IPaginationDto):
     Promise<IResponseDto<IPaginationDto>> {
     try {
-      const customers: IPaginationDto = await this.manageCustomerService.findAll(pageOption);
+      const customers: IPaginationDto = 
+      await this.manageCustomerService.findAll(pageOption);
 
       return {
         status: HttpStatus.OK,
@@ -57,9 +59,11 @@ export class ManageCustomerController {
   @ApiConsumes('multipart/form-data')
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<IResponseDto<IManageCustomer>> {
+  async uploadFile(@UploadedFile() file: Express.Multer.File): 
+  Promise<IResponseDto<IManageCustomer>> {
     try {
-      const customers: IManageCustomer[] = await this.manageCustomerService.importFile(file);
+      const customers: IManageCustomer[] = 
+      await this.manageCustomerService.importFile(file);
 
       return {
         status: HttpStatus.OK,
