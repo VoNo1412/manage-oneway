@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile, Header } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ManageCustomerService } from './manage-customer.service';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { HttpStatus } from '@nestjs/common/enums';
@@ -6,7 +6,8 @@ import { IResponseDto } from 'src/common/response/response.dto';
 import { IManageCustomer } from './interface/manage-customer.interface';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import {  ApiConsumes } from '@nestjs/swagger';
+import { IimportManageCustomerDto } from './dto/import-manage-customer.dto';
 
 @Controller('manage-customer')
 export class ManageCustomerController {
@@ -62,7 +63,7 @@ export class ManageCustomerController {
   async uploadFile(@UploadedFile() file: Express.Multer.File): 
   Promise<IResponseDto<IManageCustomer>> {
     try {
-      const customers: IManageCustomer[] = 
+      const customers: any = 
       await this.manageCustomerService.importFile(file);
 
       return {

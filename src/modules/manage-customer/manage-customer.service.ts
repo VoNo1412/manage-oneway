@@ -7,6 +7,8 @@ import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { chooseCustomer, ManageCustomer } from './entities/manage-customer.entity';
 import { IManageCustomer } from './interface/manage-customer.interface';
 import * as XLSX from 'xlsx';
+import { IimportManageCustomerDto } from './dto/import-manage-customer.dto';
+import * as _ from 'lodash';
 
 @Injectable()
 export class ManageCustomerService {
@@ -33,7 +35,7 @@ export class ManageCustomerService {
       resource,
       relationship } = createManageCustomerDto;
 
-    const manageCustomerBuilder = Builder<IManageCustomer>()
+    const manageCustomerBuilder = Builder<ManageCustomer>()
       .name(name)
       .sex(sex)
       .dateOfBirth(new Date(dateOfBirth))
@@ -84,50 +86,34 @@ export class ManageCustomerService {
   }
 
   async importFile(file: Express.Multer.File): Promise<any> {
+   
+
     const workbook = XLSX.read(file.buffer, { type: 'buffer' });
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const range = XLSX.utils.decode_range(worksheet['!ref']);
-    const data = [];
-    const db = [];
-    for (let row = range.s.r; row <= range.e.r; row++) {
-      const rowData = [];
-      for (let col = range.s.c; col <= range.e.c; col++) {
+
+    const data = _.range(range.s.r, range.e.r + 1).map(row => (
+      _.range(range.s.c, range.e.c + 1).map(col => {
         const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-        const cell = worksheet[cellAddress]
-        const value = cell ? cell.v : '';
-        rowData.push(value);
-      }
+        const cell = worksheet[cellAddress];
+        return cell ? cell.v : '';
+      })
+    ));
 
-      data.push(rowData);
-    }
+    console.log(_(data).slice(1).map(row => console.log(row)));
 
-    const refactorData = async (data: string[]) => {
-      const promises = [];
-
-      for (let i = 1; i < data.length; i++) {
-        const person: CreateManageCustomerDto = {};
-        for (let j = 0; j < data[i].length; j++) {
-          person[`${data[0][j]}`] = data[i][j]
-        }
-
-        // I don't know flow code and field 
-        const manageCustomerBuilder = Builder<IManageCustomer>()
-          .name(person.name)
-          .resource(person.resource)
-          .phone(person.phone1)
-          .build();
-
-        const newCustomer = this.manageCustomerRepository.create(manageCustomerBuilder);
-        db.push(newCustomer);
-        const resultCustomer = await this.manageCustomerRepository.save(newCustomer);
-        promises.push(this.manageCustomerRepository.save(resultCustomer));
-      }
-
-      await Promise.all(promises);
-    }
-
-    refactorData(data);
-
-    return db;
+    const promises = _(data)
+      .slice(1)
+      .map(row => (
+        Builder<ManageCustomer>()
+          .name(row[0])
+          .resource(row[1])
+          .phone(row[2])
+          .build()
+      ))
+      .map(customer => (
+        this.manageCustomerRepository.save(customer)
+      ))
+      .value();
   }
 }
