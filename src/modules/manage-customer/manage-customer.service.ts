@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Builder } from 'builder-pattern';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
@@ -15,6 +15,11 @@ export class ManageCustomerService {
   constructor(
     @InjectRepository(ManageCustomer)
     private readonly manageCustomerRepository: Repository<ManageCustomer>) { }
+
+  async deleteCustomer(id: number) {
+    return this.manageCustomerRepository.delete({id});
+  }
+
   async create(
     createManageCustomerDto: CreateManageCustomerDto,
     chooseQuery: string): Promise<IManageCustomer> {
@@ -72,8 +77,7 @@ export class ManageCustomerService {
       await this.manageCustomerRepository.find({
         take: pageOption.size,
         skip: pageOption.offset,
-        where: pageOption.filter,
-        order: { createdDate: pageOption.sort as any }
+        order: { id: -1 },
       })
 
     return {
@@ -115,5 +119,14 @@ export class ManageCustomerService {
         this.manageCustomerRepository.save(customer)
       ))
       .value();
+  }
+
+  async findCustomerById(id: number) {
+    const customer = this.manageCustomerRepository.findOneBy({id});
+    if(!customer) {
+      throw new HttpException('customer doesn"t not exist', HttpStatus.NOT_FOUND);
+    }
+
+    return customer;
   }
 }

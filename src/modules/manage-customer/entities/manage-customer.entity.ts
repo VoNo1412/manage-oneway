@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PrimaryGeneratedColumn } from 'typeorm';
+import { ManageContract } from 'src/modules/manage-contract/entities/manage-contract.entity';
+import { JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Column } from 'typeorm/decorator/columns/Column';
 import { Entity } from 'typeorm/decorator/entity/Entity';
 
@@ -78,7 +79,7 @@ export class ManageCustomer {
     @ApiProperty()
     relationship: string
 
-    @Column({nullable: true})
+    @Column({ nullable: true })
     @ApiProperty()
     other: string
 
@@ -105,5 +106,8 @@ export class ManageCustomer {
     })
     @ApiProperty()
     createdDate: Date
+
+    @OneToMany(() => ManageContract, contract => contract.customers)
+    contracts: ManageContract[]
 }
 

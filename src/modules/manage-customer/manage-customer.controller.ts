@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile, Delete, Param } from '@nestjs/common';
 import { ManageCustomerService } from './manage-customer.service';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { HttpStatus } from '@nestjs/common/enums';
@@ -12,6 +12,13 @@ import { IimportManageCustomerDto } from './dto/import-manage-customer.dto';
 @Controller('manage-customer')
 export class ManageCustomerController {
   constructor(private readonly manageCustomerService: ManageCustomerService) { }
+
+  @Delete(':customerId')
+  async remove(
+    @Param("customerId") customerId: number
+  ) {
+    return await this.manageCustomerService.deleteCustomer(customerId)
+  }
 
   @Post()
   async create(

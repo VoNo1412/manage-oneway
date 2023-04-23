@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Get, Query, Param } from '@nestjs/common';
 import { ManageContractService } from './manage-contract.service';
 import { CreateManageContractDto } from './dto/create-manage-contract.dto';
 import { IManageContract } from './interface/manage-contract.interface';
@@ -9,11 +9,13 @@ import { IPaginationDto } from 'src/common/pagination/pagination.dto';
 export class ManageContractController {
   constructor(private readonly manageContractService: ManageContractService) { }
 
-  @Post()
-  async create(@Body() createManageContractDto: CreateManageContractDto): Promise<IResponseDto<IManageContract>> {
+  @Post(":customerId")
+  async create(
+    @Param("customerId") customerId: number,
+    @Body() createManageContractDto: CreateManageContractDto): Promise<IResponseDto<IManageContract>> {
     try {
       const newManageContract: IManageContract = await
-        this.manageContractService.create(createManageContractDto);
+        this.manageContractService.create(createManageContractDto, customerId);
 
       return {
         status: HttpStatus.OK,

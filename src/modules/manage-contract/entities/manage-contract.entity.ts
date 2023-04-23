@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, Column } from "typeorm"
+import { ManageCustomer } from 'src/modules/manage-customer/entities/manage-customer.entity';
+import { Entity, Column, ManyToMany, ManyToOne, JoinColumn } from "typeorm"
 import { PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'manage-contract' })
@@ -33,7 +34,7 @@ export class ManageContract {
 
     @Column()
     @ApiProperty()
-    Cycle: string;
+    cycle: string;
 
     @Column({
         type: 'datetime',
@@ -42,4 +43,8 @@ export class ManageContract {
     })
     @ApiProperty()
     createdDate: Date
+
+    @ManyToOne(() => ManageCustomer, customer => customer.contracts, {  onDelete: 'CASCADE'})
+    @JoinColumn()
+    customers: ManageCustomer
 }
