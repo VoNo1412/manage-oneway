@@ -1,11 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
-import { QueryBuilder, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateManageContractDto } from './dto/create-manage-contract.dto';
 import { ManageContract } from './entities/manage-contract.entity';
 import { IManageContract } from './interface/manage-contract.interface';
-import { ManageCustomer } from '../manage-customer/entities/manage-customer.entity';
 import { ManageCustomerService } from '../manage-customer/manage-customer.service';
 import { Builder } from 'builder-pattern';
 
@@ -41,6 +40,7 @@ export class ManageContractService {
       .createQueryBuilder("contract")
       .leftJoinAndSelect('contract.customers', 'cus')
       .select(['contract', 'cus.name', 'cus.job'])
+      .groupBy()
       .getMany()
 
     console.log(contracts);

@@ -6,8 +6,8 @@ import { Repository } from 'typeorm';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { chooseCustomer, ManageCustomer } from './entities/manage-customer.entity';
 import { IManageCustomer } from './interface/manage-customer.interface';
-import * as XLSX from 'xlsx';
-import { IimportManageCustomerDto } from './dto/import-manage-customer.dto';
+import * as xlsx from 'xlsx';
+import { IimportManageCustomerDto, IimportManageCustomerDtoSpecial } from './dto/import-manage-customer.dto';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -17,46 +17,30 @@ export class ManageCustomerService {
     private readonly manageCustomerRepository: Repository<ManageCustomer>) { }
 
   async deleteCustomer(id: number) {
-    return this.manageCustomerRepository.delete({id});
+    return this.manageCustomerRepository.delete({ id });
   }
 
   async create(
     createManageCustomerDto: CreateManageCustomerDto,
     chooseQuery: string): Promise<IManageCustomer> {
-    const { name,
-      sex,
-      dateOfBirth,
-      phone1,
-      phone2,
-      phone3,
-      married,
-      income,
-      familiarityLevel,
-      job,
-      enterprise,
-      email,
-      address,
-      code,
-      resource,
-      relationship } = createManageCustomerDto;
 
     const manageCustomerBuilder = Builder<ManageCustomer>()
-      .name(name)
-      .sex(sex)
-      .dateOfBirth(new Date(dateOfBirth))
-      .phone1(phone1)
-      .phone2(phone2)
-      .phone3(phone3)
-      .married(married)
-      .income(income)
-      .familiarityLevel(familiarityLevel)
-      .job(job)
-      .enterprise(enterprise)
-      .email(email)
-      .address(address)
-      .code(code)
-      .resource(resource)
-      .relationship(relationship)
+      .name(createManageCustomerDto.name)
+      .sex(createManageCustomerDto.sex)
+      .dateOfBirth(new Date(createManageCustomerDto.dateOfBirth))
+      .phone1(createManageCustomerDto.phone1)
+      .phone2(createManageCustomerDto.phone2)
+      .phone3(createManageCustomerDto.phone3)
+      .married(createManageCustomerDto.married)
+      .income(createManageCustomerDto.income)
+      .familiarityLevel(createManageCustomerDto.familiarityLevel)
+      .job(createManageCustomerDto.job)
+      .enterprise(createManageCustomerDto.enterprise)
+      .email(createManageCustomerDto.email)
+      .address(createManageCustomerDto.address)
+      .code(createManageCustomerDto.code)
+      .resource(createManageCustomerDto.resource)
+      .relationship(createManageCustomerDto.relationship)
       .choose(chooseQuery)
       .build()
 
@@ -89,41 +73,25 @@ export class ManageCustomerService {
     };
   }
 
-  async importFile(file: Express.Multer.File): Promise<any> {
-   
-
-    const workbook = XLSX.read(file.buffer, { type: 'buffer' });
-    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    const range = XLSX.utils.decode_range(worksheet['!ref']);
-
-    const data = _.range(range.s.r, range.e.r + 1).map(row => (
-      _.range(range.s.c, range.e.c + 1).map(col => {
-        const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-        const cell = worksheet[cellAddress];
-        return cell ? cell.v : '';
-      })
-    ));
-
-    console.log(_(data).slice(1).map(row => console.log(row)));
-
-    const promises = _(data)
-      .slice(1)
-      .map(row => (
-        Builder<ManageCustomer>()
-          .name(row[0])
-          .resource(row[1])
-          .phone(row[2])
-          .build()
+  async importFile(customers: IimportManageCustomerDtoSpecial[]): Promise<any> {
+      const resultData = _.groupBy(customers, cus => cus.name)
+      const cus = customers.map(cus => (
+        Builder<IimportManageCustomerDtoSpecial>()
+        .STT(resultData[cus.name][0].STT)
+        .name(resultData[cus.name][0].name)
+        .age(resultData[cus.name][0].age)
+        .other(resultData[cus.name][0].other)
+        .superNumber(resultData[cus.name][0].superNumber)
+        .pointional(resultData[cus.name][0].pointional)
+        .resource(resultData[cus.name][0].resource)
+        .build()
       ))
-      .map(customer => (
-        this.manageCustomerRepository.save(customer)
-      ))
-      .value();
+      return cus;
   }
 
   async findCustomerById(id: number) {
-    const customer = this.manageCustomerRepository.findOneBy({id});
-    if(!customer) {
+    const customer = this.manageCustomerRepository.findOneBy({ id });
+    if (!customer) {
       throw new HttpException('customer doesn"t not exist', HttpStatus.NOT_FOUND);
     }
 

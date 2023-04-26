@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { Expose } from "class-transformer"
 
-import { IsBoolean, IsNumber, IsString } from "class-validator"
+import { Allow, IsBoolean, IsNumber, IsOptional, IsString } from "class-validator"
 
 export class IimportManageCustomerDto {
     @Expose({
@@ -9,97 +9,168 @@ export class IimportManageCustomerDto {
     })
     @ApiProperty()
     @IsString()
-    name?: string
+    @IsOptional()
+    name: string
 
     @Expose({
         name: 'Sex'
     })
     @ApiProperty()
+    @IsOptional()
     @IsBoolean()
-    sex?: boolean
+    sex: boolean
 
     @Expose({
         name: 'Age'
     })
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    dateOfBirth?: Date
+    dateOfBirth: Date
 
-    
+
     @Expose({
         name: 'Số điện thoại 1'
     })
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    phone1?: string
+    phone1: string
 
     @Expose({
         name: 'Số điện thoại 2'
     })
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    phone2?: string
+    phone2: string
 
     @Expose({
         name: 'Số điện thoại 3'
     })
     @IsString()
     @ApiProperty()
-    phone3?: string
+    @IsOptional()
+    phone3: string
 
     @ApiProperty()
+    @IsOptional()
     @IsBoolean()
-    married?: boolean
+    married: boolean
 
     @ApiProperty()
+    @IsOptional()
     @IsNumber()
-    income?: number
+    income: number
 
+    @IsOptional()
     @IsString()
     @ApiProperty()
-    familiarityLevel?: string
+    familiarityLevel: string
 
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    job?: string
+    job: string
 
+    @IsOptional()
     @IsString()
     @ApiProperty()
-    enterprise?: string
+    enterprise: string
 
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    email?: string
+    email: string
 
+    @IsOptional()
     @IsString()
     @ApiProperty()
-    address?: string
+    address: string
 
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    code?: string
+    code: string
 
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    resource?: string
+    resource: string
 
+    @IsOptional()
     @IsString()
     @ApiProperty()
-    relationship?: string
+    relationship: string
 
+    @IsOptional()
     @IsString()
     @ApiProperty()
-    other?: string
+    other: string
 
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    choose?: string
+    choose: string
 
+    @IsOptional()
     @IsString()
     @ApiProperty()
-    nameEnterprise?: string
+    nameEnterprise: string
 
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    phone?: string
+    phone: string
+}
+
+export class IimportManageCustomerDtoSpecial {
+    @Expose({
+        name: 'STT'
+    })
+    @IsOptional()
+    @IsString()
+    STT: string;
+
+    @Expose({
+        name: 'name'
+    })
+    @IsOptional()
+    @IsString()
+    name: string;
+
+    @Expose({
+        name: 'age'
+    })
+    @IsOptional()
+    @IsNumber()
+    age: string;
+
+    @Expose({
+        name: 'resource'
+    })
+    @IsOptional()
+    @IsString()
+    resource: string;
+
+    @Expose({
+        name: 'Thần số học'
+    })
+    @IsOptional()
+    @IsNumber()
+    superNumber: number;
+
+    @Expose({
+        name: 'Tiềm năng'
+    })
+    @IsOptional()
+    @IsNumber()
+    pointional: number;
+
+    @Expose({
+        name: 'other'
+    })
+    @IsOptional()
+    @IsString()
+    other: string;
 }
