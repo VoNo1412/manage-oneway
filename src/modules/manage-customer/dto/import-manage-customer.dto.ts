@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { Expose } from "class-transformer"
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
+import { Expose, Type } from "class-transformer"
 
 import { Allow, IsBoolean, IsNumber, IsOptional, IsString } from "class-validator"
 
@@ -124,7 +124,7 @@ export class IimportManageCustomerDto {
     phone: string
 }
 
-export class IimportManageCustomerDtoSpecial {
+export class CustomerExcel {
     @Expose({
         name: 'STT'
     })
@@ -173,4 +173,53 @@ export class IimportManageCustomerDtoSpecial {
     @IsOptional()
     @IsString()
     other: string;
+}
+
+export class PersonExcel {
+    @Expose({
+        name: 'Index'
+    })
+    @IsOptional()
+    @IsString()
+    STT: string;
+
+    @Expose({
+        name: 'quote'
+    })
+    @IsOptional()
+    @IsString()
+    quote: string;
+
+    @Expose({
+        name: 'area'
+    })
+    @IsOptional()
+    @IsString()
+    area: string;
+
+    @Expose({
+        name: 'resource'
+    })
+    @IsOptional()
+    @IsString()
+    resource: string;
+
+    @Expose({
+        name: 'Job'
+    })
+    @IsOptional()
+    @IsString()
+    job: string;
+}
+
+export class IimportManageCustomerDtoSpecial {
+    @ApiPropertyOptional()
+    @IsOptional()
+    @Type(() => CustomerExcel)
+    customers: CustomerExcel[];
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @Type(() => PersonExcel)
+    person: PersonExcel[];
 }

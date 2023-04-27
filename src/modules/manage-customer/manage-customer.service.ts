@@ -6,9 +6,7 @@ import { Repository } from 'typeorm';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { chooseCustomer, ManageCustomer } from './entities/manage-customer.entity';
 import { IManageCustomer } from './interface/manage-customer.interface';
-import * as xlsx from 'xlsx';
-import { IimportManageCustomerDto, IimportManageCustomerDtoSpecial } from './dto/import-manage-customer.dto';
-import * as _ from 'lodash';
+import {  IimportManageCustomerDtoSpecial } from './dto/import-manage-customer.dto';
 
 @Injectable()
 export class ManageCustomerService {
@@ -73,20 +71,8 @@ export class ManageCustomerService {
     };
   }
 
-  async importFile(customers: IimportManageCustomerDtoSpecial[]): Promise<any> {
-      const resultData = _.groupBy(customers, cus => cus.name)
-      const cus = customers.map(cus => (
-        Builder<IimportManageCustomerDtoSpecial>()
-        .STT(resultData[cus.name][0].STT)
-        .name(resultData[cus.name][0].name)
-        .age(resultData[cus.name][0].age)
-        .other(resultData[cus.name][0].other)
-        .superNumber(resultData[cus.name][0].superNumber)
-        .pointional(resultData[cus.name][0].pointional)
-        .resource(resultData[cus.name][0].resource)
-        .build()
-      ))
-      return cus;
+  async importFile(customers: IimportManageCustomerDtoSpecial): Promise<any> {
+    return customers;
   }
 
   async findCustomerById(id: number) {

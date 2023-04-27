@@ -75,7 +75,7 @@ export class ManageCustomerController {
         items: IimportManageCustomerDtoSpecial,
         whitelist: true
       })
-    ) customersDto:IimportManageCustomerDtoSpecial[]): 
+    ) customersDto:IimportManageCustomerDtoSpecial): 
     Promise<IResponseDto<IManageCustomer>> {
       const data = await this.manageCustomerService.importFile(customersDto);
 
