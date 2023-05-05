@@ -7,6 +7,7 @@ import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { chooseCustomer, ManageCustomer } from './entities/manage-customer.entity';
 import { IManageCustomer } from './interface/manage-customer.interface';
 import {  IimportManageCustomerDtoSpecial } from './dto/import-manage-customer.dto';
+import * as xlsx from 'xlsx';
 
 @Injectable()
 export class ManageCustomerService {
@@ -42,7 +43,7 @@ export class ManageCustomerService {
       .choose(chooseQuery)
       .build()
 
-    const newCustomer = await this.manageCustomerRepository.create(manageCustomerBuilder);
+    const newCustomer =  this.manageCustomerRepository.create(manageCustomerBuilder);
 
     if (chooseQuery === chooseCustomer.enterprise) {
       newCustomer.nameEnterprise = createManageCustomerDto.nameEnterprise;
@@ -73,6 +74,14 @@ export class ManageCustomerService {
 
   async importFile(customers: IimportManageCustomerDtoSpecial): Promise<any> {
     return customers;
+  }
+
+  async exportFile() {
+    const data = await this.manageCustomerRepository.find()
+    const ws = xlsx.utils.json_to_sheet(data);
+    const wb = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, ws, 'SpeechScript');
+    return xlsx.write(wb, { bookType: 'xlsx', type: 'buffer' });
   }
 
   async findCustomerById(id: number) {

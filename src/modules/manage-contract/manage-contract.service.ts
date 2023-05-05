@@ -28,8 +28,7 @@ export class ManageContractService {
       .cycle(createManageContractDto.cycle)
       .customers(customer)
       .build()
-
-
+      
     const newManageContract = this.manageContractRepsitory.create(contractBuilder);
 
     return await this.manageContractRepsitory.save(newManageContract);
@@ -38,12 +37,11 @@ export class ManageContractService {
   async findAll(pageOption: IPaginationDto): Promise<IPaginationDto> {
     const contracts = await this.manageContractRepsitory
       .createQueryBuilder("contract")
-      .leftJoinAndSelect('contract.customers', 'cus')
-      .select(['contract', 'cus.name', 'cus.job'])
-      .groupBy()
+      .leftJoin('contract.customers', 'cus')
+      .select(['cus.name', 'cus.phone', 'contract'])
+      .orderBy('contract.createdDate', 'DESC')
       .getMany()
-
-    console.log(contracts);
+      
     return {
       size: pageOption.size,
       page: pageOption.page,

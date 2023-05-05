@@ -12,21 +12,18 @@ export class UserService {
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) { }
 
   async createUser(createUserDto: CreateUserDto): Promise<IUserEntity> {
-
-    const { email, password, username } = createUserDto;
-
     const userBuilder = Builder<IUserEntity>()
-      .username(username)
-      .email(email)
-      .password(password)
+      .username(createUserDto.username)
+      .email(createUserDto.email)
+      .password(createUserDto.password)
       .build();
 
-    const checkExistUser = await this.userRepository.findOneBy({ email })
-
+    const checkExistUser = await this.findUser(userBuilder.email)
     if (checkExistUser) {
       throw new HttpException('Already exist email!', HttpStatus.BAD_REQUEST);
     }
-    const newUser = await this.userRepository.create(userBuilder);
+
+    const newUser =  this.userRepository.create(userBuilder);
     return this.userRepository.save(newUser);
   }
 

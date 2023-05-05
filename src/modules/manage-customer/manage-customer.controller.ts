@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile, Delete, Param, ParseArrayPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile, Delete, Param, ParseArrayPipe, Res } from '@nestjs/common';
 import { ManageCustomerService } from './manage-customer.service';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { HttpStatus } from '@nestjs/common/enums';
@@ -9,6 +9,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
 import { IimportManageCustomerDto, IimportManageCustomerDtoSpecial } from './dto/import-manage-customer.dto';
 import { ParseXlsxPipe } from 'src/common/pipes/parse.xlsx';
+import { Response } from 'express';
+import { SetHeaderInterceptor } from './helper/setHeader.helper';
 
 @Controller('manage-customer')
 export class ManageCustomerController {
@@ -65,6 +67,14 @@ export class ManageCustomerController {
     }
   }
 
+  @Get('export')
+  @UseInterceptors(SetHeaderInterceptor)
+  async exportFile(@Res() res: Response) {
+    const buffer = await this.manageCustomerService.exportFile()
+    return res.send(buffer);
+  }
+
+
   @Post('upload')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
@@ -75,14 +85,14 @@ export class ManageCustomerController {
         items: IimportManageCustomerDtoSpecial,
         whitelist: true
       })
-    ) customersDto:IimportManageCustomerDtoSpecial): 
+    ) customersDto: IimportManageCustomerDtoSpecial):
     Promise<IResponseDto<IManageCustomer>> {
-      const data = await this.manageCustomerService.importFile(customersDto);
+    const data = await this.manageCustomerService.importFile(customersDto);
 
-      return {
-        status: HttpStatus.OK,
-        data: data,
-        message: 'import customer success!'
-      }
+    return {
+      status: HttpStatus.OK,
+      data: data,
+      message: 'import customer success!'
+    }
   }
 }

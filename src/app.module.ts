@@ -24,6 +24,7 @@ import { ManageContract } from './modules/manage-contract/entities/manage-contra
           ManageContract
       ],
       synchronize: true,
+      logging: true
     }),
     UserModule,
     AuthModule,
