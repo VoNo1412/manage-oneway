@@ -7,9 +7,13 @@ import { TypeOrmModule } from '@nestjs/typeorm/dist';
 import { ManageCustomer } from './modules/manage-customer/entities/manage-customer.entity';
 import { User } from './modules/user/entities/user.entity';
 import { ManageContract } from './modules/manage-contract/entities/manage-contract.entity';
+import { TransporterModule } from './modules/transporters/transporters.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -29,7 +33,8 @@ import { ManageContract } from './modules/manage-contract/entities/manage-contra
     UserModule,
     AuthModule,
     ManageCustomerModule,
-    ManageContractModule
+    ManageContractModule,
+    TransporterModule
   ],
 })
 export class AppModule { }

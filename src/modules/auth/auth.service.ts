@@ -8,8 +8,7 @@ export class AuthService {
   constructor(private userService: UserService) {}
 
   async signUp(createAuthDto: CreateAuthDto): Promise<IUserEntity> {
-    const newUser: IUserEntity = await this.userService.createUser(createAuthDto);
-    return newUser;
+    return await this.userService.createUser(createAuthDto);
   }
 
   async validateUser(email: string, pass: string): Promise<IUserEntity> {

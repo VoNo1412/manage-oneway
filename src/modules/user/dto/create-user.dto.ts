@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Expose } from "class-transformer";
-import { IsString } from "class-validator";
+import { Allow, IsString } from "class-validator";
 
 export class CreateUserDto {
     @ApiProperty({
@@ -17,5 +16,6 @@ export class CreateUserDto {
     @ApiProperty({
         example: 'vono1412'
     })
+    @Allow()
     username?: string;
 }
