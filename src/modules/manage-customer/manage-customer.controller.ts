@@ -6,12 +6,13 @@ import { IResponseDto } from 'src/common/response/response.dto';
 import { IManageCustomer } from './interface/manage-customer.interface';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes } from '@nestjs/swagger';
-import { IimportManageCustomerDto, IimportManageCustomerDtoSpecial } from './dto/import-manage-customer.dto';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { IimportManageCustomerDtoSpecial } from './dto/import-manage-customer.dto';
 import { ParseXlsxPipe } from 'src/common/pipes/parse.xlsx';
 import { Response } from 'express';
 import { SetHeaderInterceptor } from './helper/setHeader.helper';
 
+@ApiTags('Manage Customer')
 @Controller('manage-customer')
 export class ManageCustomerController {
   constructor(private readonly manageCustomerService: ManageCustomerService) { }

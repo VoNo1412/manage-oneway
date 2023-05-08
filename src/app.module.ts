@@ -9,9 +9,16 @@ import { User } from './modules/user/entities/user.entity';
 import { ManageContract } from './modules/manage-contract/entities/manage-contract.entity';
 import { TransporterModule } from './modules/transporters/transporters.module';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      // exclude: ['/api*'],
+      serveRoot: '/public',
+    }),
     ConfigModule.forRoot({
     }),
     TypeOrmModule.forRoot({

@@ -6,8 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm/repository/Repository';
 import { Builder } from 'builder-pattern';
-import { MailerService } from '@nestjs-modules/mailer';
+import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import * as process from 'process';
+import { imageDev } from 'src/common/constants/image.constants';
 
 @Injectable()
 export class UserService {
@@ -28,17 +29,25 @@ export class UserService {
       throw new HttpException('Already exist email!', HttpStatus.BAD_REQUEST);
     }
 
-    await this.mailerService.sendMail({
+    const emailOptions: ISendMailOptions = {
       to: userBuilder.email,
       from: process.env.MAIL_FROM,
       subject: 'Welcome to my website',
       template: './welcome',
       context: {
-        name: userBuilder.username
-      }
-    })
+        name: userBuilder.username,
+        imageUrl: imageDev,
+        heros: ['yasuo', 'zed', 'sherlock']
+      },
+      html: '<h1>File Attachment</h1>',
+      attachments: [{
+        filename: ''
+      }]
+    }
 
-    const newUser =  this.userRepository.create(userBuilder);
+    await this.mailerService.sendMail(emailOptions);
+
+    const newUser = this.userRepository.create(userBuilder);
     return this.userRepository.save(newUser);
   }
 
