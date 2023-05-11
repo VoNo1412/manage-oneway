@@ -1,10 +1,11 @@
-import { Controller, Post, Body, UseGuards, Request, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, HttpStatus, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { IResponseDto } from 'src/common/response/response.dto';
 import { IUserEntity } from '../user/interface/user.interface';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { IRequestUser } from 'src/common/interface/request.interface';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -30,9 +31,10 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Request() req: any): Promise<IResponseDto<IUserEntity>> {
+  async login(@Req() req: IRequestUser): Promise<IResponseDto<IUserEntity>> {
     try {
       const user: IUserEntity = req.user;
+      
       return {
         status: HttpStatus.OK,
         data: user,

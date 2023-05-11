@@ -9,6 +9,7 @@ import { Builder } from 'builder-pattern';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import * as process from 'process';
 import { imageDev } from 'src/common/constants/image.constants';
+import { join } from 'path';
 
 @Injectable()
 export class UserService {
@@ -29,26 +30,39 @@ export class UserService {
       throw new HttpException('Already exist email!', HttpStatus.BAD_REQUEST);
     }
 
+    const newUser = this.userRepository.create(userBuilder);
+    return this.userRepository.save(newUser);
+  }
+
+  async sendEmail(user: IUserEntity, fileId: string) {
+    const pathFile = join(process.cwd(), 'public', 'uploads', fileId);
+
     const emailOptions: ISendMailOptions = {
-      to: userBuilder.email,
+      to: user.email,
       from: process.env.MAIL_FROM,
       subject: 'Welcome to my website',
       template: './welcome',
       context: {
-        name: userBuilder.username,
+        name: user.username,
         imageUrl: imageDev,
         heros: ['yasuo', 'zed', 'sherlock']
       },
-      html: '<h1>File Attachment</h1>',
+      html: '<h1>How to learn everything?</h1>',
       attachments: [{
-        filename: ''
+        filename: `hero.png`,
+        content: "this is my content",
+        path: pathFile,
+        contentType: 'image/*',
+        contentDisposition: 'inline'
+        // href?: string;
       }]
     }
 
     await this.mailerService.sendMail(emailOptions);
+  }
 
-    const newUser = this.userRepository.create(userBuilder);
-    return this.userRepository.save(newUser);
+  async findAttachment() {
+
   }
 
   async findUser(email: string) {

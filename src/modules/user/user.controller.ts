@@ -1,10 +1,14 @@
-import { Controller, Get, Param, Res} from '@nestjs/common';
+import { Controller, Get, Param, Post, Res, UseGuards} from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { join } from 'path';
+import { IUserEntity } from './interface/user.interface';
+import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from 'src/common/decorators/user.decorators';
 
 @ApiTags('User')
+@UseGuards(AuthGuard('local'))
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -15,5 +19,12 @@ export class UserController {
     @Res() res: Response) {
       const pathFile = join(process.cwd(), 'public', 'uploads', fileId);
       return res.download(pathFile)
+  }
+
+  @Post('sendEmail') 
+  async sendEmail(
+    @CurrentUser() user: IUserEntity
+  ) {
+    return await this.userService.sendEmail(user, 'avatar.png');
   }
 }
