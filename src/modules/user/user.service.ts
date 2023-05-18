@@ -34,35 +34,33 @@ export class UserService {
     return this.userRepository.save(newUser);
   }
 
-  async sendEmail(user: IUserEntity, fileId: string) {
-    const pathFile = join(process.cwd(), 'public', 'uploads', fileId);
+  async sendEmail(user: IUserEntity, fileIds: string[]) {
+    const attachments = fileIds?.map((fileId) => {
+      const pathFile = join(process.cwd(), 'public', 'uploads', fileId);
+      return {
+        filename: fileId,
+        content: "this is my content",
+        path: pathFile,
+        contentType: '*',
+      }
+    });
 
     const emailOptions: ISendMailOptions = {
-      to: user.email,
+      to: ['vuxuanhuy2k1@gmail.com', 'xkaioken9x@gmail.com'],
       from: process.env.MAIL_FROM,
-      subject: 'Welcome to my website',
+      subject: 'fucking my website',
       template: './welcome',
       context: {
-        name: user.username,
+        name: "user.username",
         imageUrl: imageDev,
         heros: ['yasuo', 'zed', 'sherlock']
       },
       html: '<h1>How to learn everything?</h1>',
-      attachments: [{
-        filename: `hero.png`,
-        content: "this is my content",
-        path: pathFile,
-        contentType: 'image/*',
-        contentDisposition: 'inline'
-        // href?: string;
-      }]
+      attachments
     }
 
-    await this.mailerService.sendMail(emailOptions);
-  }
-
-  async findAttachment() {
-
+    const success = await this.mailerService.sendMail(emailOptions);
+    return !!success && emailOptions
   }
 
   async findUser(email: string) {

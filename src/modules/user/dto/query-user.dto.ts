@@ -1,6 +1,8 @@
-import { IsString } from "class-validator";
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { IsOptional } from "class-validator";
 
 export class QueryUserDto {
-    @IsString()
-    toEmail: string;
+    @ApiPropertyOptional({ isArray: true, type: Array })
+    @IsOptional()
+    fileIds?: string[]
 }
