@@ -1,9 +1,8 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { IRequestUser } from '../interface/request.interface';
 
-export const CurrentUser = createParamDecorator(
+export const UserDecorator = createParamDecorator(
   (data: unknown, context: ExecutionContext): any => {
-    const request = context.switchToHttp().getRequest<IRequestUser>();
+    const request = context.switchToHttp().getRequest<any>();
     return request.user;
   },
 );

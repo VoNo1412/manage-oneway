@@ -18,9 +18,9 @@ export class UserService {
     private readonly mailerService: MailerService,
   ) { }
 
-  async createUser(createUserDto: CreateUserDto): Promise<IUserEntity> {
+  async createUser(createUserDto: CreateUserDto): Promise<any> {
     const userBuilder = Builder<IUserEntity>()
-      .username(createUserDto.username)
+      .username(createUserDto?.username)
       .email(createUserDto.email)
       .password(createUserDto.password)
       .build();

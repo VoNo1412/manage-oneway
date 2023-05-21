@@ -1,8 +1,8 @@
 
 
 export interface IResponseDto<T> {
-    status: number,
-    data: T | T[] | null | any;
+    status?: number,
+    data?: T | T[] | null | any;
     message?: string;
     [key: string]: any;
 }

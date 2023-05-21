@@ -16,7 +16,6 @@ import { join } from 'path';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
-      // exclude: ['/api*'],
       serveRoot: '/public',
     }),
     ConfigModule.forRoot({
@@ -35,13 +34,13 @@ import { join } from 'path';
           ManageContract
       ],
       synchronize: true,
-      logging: true
+      logging: false
     }),
     UserModule,
     AuthModule,
     ManageCustomerModule,
     ManageContractModule,
-    TransporterModule
+    TransporterModule,
   ],
 })
 export class AppModule { }

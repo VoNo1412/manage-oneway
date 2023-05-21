@@ -28,6 +28,6 @@ export class User {
     }
 
     @ApiProperty()
-    @Column()
+    @Column({ nullable: true })
     username: string;
 }
