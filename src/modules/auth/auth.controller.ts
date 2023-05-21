@@ -2,9 +2,8 @@ import { Controller } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto/auth.dto";
-import { Body, Post, Req, UseGuards, Request, Get } from "@nestjs/common";
+import { Body, Post, UseGuards } from "@nestjs/common";
 import { LocalAuthGuard } from "./guard/auth.local.guard";
-import { IResponseDto } from "src/common/response/response.dto";
 import { IUserEntity } from "../user/interface/user.interface";
 import { UserDecorator } from "src/common/decorators/user.decorators";
 
@@ -15,11 +14,11 @@ export class AuthController {
 
     @UseGuards(LocalAuthGuard)
     @Post('login')
-    @ApiBody({type: AuthDto})
+    @ApiBody({ type: AuthDto })
     async login(
         @UserDecorator() user: IUserEntity
     ) {
-        return user;
+        return await this.authService.signIn(user);
     }
 
     @Post('signUp')

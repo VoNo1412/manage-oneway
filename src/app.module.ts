@@ -11,6 +11,7 @@ import { TransporterModule } from './modules/transporters/transporters.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { JwtHelper } from './modules/auth/helper/jwt.helper';
 
 @Module({
   imports: [
@@ -42,5 +43,6 @@ import { join } from 'path';
     ManageContractModule,
     TransporterModule,
   ],
+  providers: [JwtHelper]
 })
 export class AppModule { }
