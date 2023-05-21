@@ -38,9 +38,9 @@ export class UserService {
     const attachments = fileIds?.map((fileId) => {
       const pathFile = join(process.cwd(), 'public', 'uploads', fileId);
       return {
-        filename: fileId,
+        filename: "file8dfc971bd8c1684406929082devops.xlsx",
         content: "this is my content",
-        path: pathFile,
+        path: "http://14.225.204.231:8080/public/uploads/file8dfc971bd8c1684406929082devops.xlsx",
         contentType: '*',
       }
     });
@@ -61,6 +61,20 @@ export class UserService {
 
     const success = await this.mailerService.sendMail(emailOptions);
     return !!success && emailOptions
+  }
+
+  async sendEmailWithAttachment(
+    to: string, 
+    subject: string, 
+    text: string, 
+    attachments: any) {
+
+    await this.mailerService.sendMail({
+      to,
+      subject,
+      text,
+      attachments,
+    });
   }
 
   async findUser(email: string) {
