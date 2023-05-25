@@ -9,7 +9,13 @@ export class ManageContract {
     id: number
 
     @Column()
-    @ApiProperty()
+    @ApiProperty(
+        {
+            name: 'this is code"s customer',
+            description: 'diff between customer',
+            example: 'vono1412'
+        }
+    )
     codeNumber: string;
 
     @Column()
@@ -44,7 +50,7 @@ export class ManageContract {
     @ApiProperty()
     createdDate: Date
 
-    @ManyToOne(() => ManageCustomer, customer => customer.contracts, {  onDelete: 'CASCADE'})
+    @ManyToOne(() => ManageCustomer, customer => customer.contracts, { onDelete: 'CASCADE' })
     @JoinColumn()
     customers: ManageCustomer
 }

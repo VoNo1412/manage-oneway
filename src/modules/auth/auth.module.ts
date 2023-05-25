@@ -23,6 +23,6 @@ import { JwtHelper } from "./helper/jwt.helper";
         })
     ],
     providers: [AuthService, LocalStrategy, JwtStrategy, JwtHelper],
-    exports: [AuthService],
+    exports: [AuthService, JwtHelper]
 })
 export class AuthModule { }

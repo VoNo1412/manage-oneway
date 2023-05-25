@@ -6,7 +6,7 @@ import { IResponseDto } from 'src/common/response/response.dto';
 import { IManageCustomer } from './interface/manage-customer.interface';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { IimportManageCustomerDtoSpecial } from './dto/import-manage-customer.dto';
 import { ParseXlsxPipe } from 'src/common/pipes/parse.xlsx';
 import { Response } from 'express';
@@ -14,6 +14,7 @@ import { SetHeaderInterceptor } from './helper/setHeader.helper';
 import { AuthGuard } from '../auth/guard/auth.jwt.guard';
 import { UserDecorator } from 'src/common/decorators/user.decorators';
 import { IUserEntity } from '../user/interface/user.interface';
+import { chooseCustomer } from './entities/manage-customer.entity';
 
 @ApiTags('Manage Customer')
 @Controller('manage-customer')
@@ -21,6 +22,8 @@ export class ManageCustomerController {
   constructor(private readonly manageCustomerService: ManageCustomerService) { }
 
   @Delete(':customerId')
+  @ApiOperation({ summary: 'Deleted customer by ID', description: 'Deleted one customer' })
+  @ApiParam({name: 'customerId', description: 'this is id of customer!', example: '98'})
   async remove(
     @Param("customerId") customerId: number
   ) {
@@ -28,9 +31,11 @@ export class ManageCustomerController {
   }
 
   @Post()
+  @ApiBody({description: 'create a new customer', type: CreateManageCustomerDto})
+  @ApiQuery({name: 'choose', description: 'this is type customer', enum: chooseCustomer})
   async create(
     @Body() createManageCustomerDto: CreateManageCustomerDto,
-    @Query('choose') chooseCustomer: string):
+    @Query() chooseCustomer: string):
     Promise<IResponseDto<IManageCustomer>> {
     try {
       const newCustomer: IManageCustomer = await

@@ -4,15 +4,16 @@ import { CreateManageContractDto } from './dto/create-manage-contract.dto';
 import { IManageContract } from './interface/manage-contract.interface';
 import { IResponseDto } from 'src/common/response/response.dto';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 @ApiTags('Manage Contract')
 @Controller('manage-contract')
 export class ManageContractController {
   constructor(private readonly manageContractService: ManageContractService) { }
 
   @Post(":customerId")
+  @ApiParam({ name: 'customerId', description: 'ID of the example', example: 98 })
   async create(
-    @Param("customerId") customerId: number,
+    @Param('customerId') customerId: number,
     @Body() createManageContractDto: CreateManageContractDto): Promise<IResponseDto<IManageContract>> {
     try {
       const newManageContract: IManageContract = await
