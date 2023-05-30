@@ -23,11 +23,12 @@ export class User {
     }
 
     async verifyPassword(password: string, hash: string) {
-        const isMatch = await bcrypt.compare(password, hash);
-        return isMatch;
+        return await bcrypt.compare(password, hash);
     }
 
     @ApiProperty()
-    @Column()
+    @Column({
+        nullable: true
+    })
     username: string;
 }

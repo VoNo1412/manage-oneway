@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile, Delete, Param, ParseArrayPipe, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile, Delete, Param, ParseArrayPipe, Res, UseGuards } from '@nestjs/common';
 import { ManageCustomerService } from './manage-customer.service';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { HttpStatus } from '@nestjs/common/enums';
@@ -11,8 +11,10 @@ import { IimportManageCustomerDtoSpecial } from './dto/import-manage-customer.dt
 import { ParseXlsxPipe } from 'src/common/pipes/parse.xlsx';
 import { Response } from 'express';
 import { SetHeaderInterceptor } from './helper/setHeader.helper';
+import { AuthGuard } from '../auth/guard/auth.jwt.guard';
 
 @ApiTags('Manage Customer')
+@UseGuards(AuthGuard)
 @Controller('manage-customer')
 export class ManageCustomerController {
   constructor(private readonly manageCustomerService: ManageCustomerService) { }

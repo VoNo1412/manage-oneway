@@ -5,15 +5,14 @@ import { Response } from 'express';
 import { join } from 'path';
 import { IUserEntity } from './interface/user.interface';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/common/decorators/user.decorators';
 import { QueryUserDto } from './dto/query-user.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs'
+import { User } from 'src/common/decorators/user.decorators';
 
 
 @ApiTags('User')
-// @UseGuards(AuthGuard('local'))
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
@@ -29,7 +28,7 @@ export class UserController {
   @Post('sendEmail')
   async sendEmail(
     @Query() userDto: QueryUserDto,
-    @CurrentUser() user: IUserEntity
+    @User() user: IUserEntity
   ) {
     return await this.userService.sendEmail(user, userDto.fileIds);
   }

@@ -38,10 +38,10 @@ import { join } from 'path';
       logging: true
     }),
     UserModule,
-    AuthModule,
     ManageCustomerModule,
     ManageContractModule,
-    TransporterModule
+    TransporterModule,
+    AuthModule
   ],
 })
 export class AppModule { }
