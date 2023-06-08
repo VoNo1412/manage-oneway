@@ -15,6 +15,7 @@ import { AuthGuard } from '../auth/guard/auth.jwt.guard';
 import { UserDecorator } from 'src/common/decorators/user.decorators';
 import { IUserEntity } from '../user/interface/user.interface';
 import { chooseCustomer } from './entities/manage-customer.entity';
+import { CustomerSerilization } from './interceptor/manage-customer.interceptor';
 
 @ApiTags('Manage Customer')
 @Controller('manage-customer')
@@ -57,18 +58,19 @@ export class ManageCustomerController {
 
   @UseGuards(AuthGuard)
   @Get()
+  @UseInterceptors(CustomerSerilization)
   async search(
     @Query() pageOption: IPaginationDto,
     @UserDecorator() user: IUserEntity
   ):
     Promise<IResponseDto<IPaginationDto>> {
     try {
-      const customers: IPaginationDto =
+      const {customers}: IPaginationDto =
         await this.manageCustomerService.findAll(pageOption);
 
       return {
         status: HttpStatus.OK,
-        data: {user, customers},
+        data: customers,
         message: 'get customer success!'
       }
     } catch (error) {

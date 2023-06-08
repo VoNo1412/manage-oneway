@@ -34,7 +34,7 @@ import { JwtHelper } from './modules/auth/helper/jwt.helper';
           ManageCustomer,
           ManageContract
       ],
-      synchronize: true,
+      synchronize: false,
       logging: false
     }),
     UserModule,
