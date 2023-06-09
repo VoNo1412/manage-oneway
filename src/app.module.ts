@@ -11,32 +11,26 @@ import { TransporterModule } from './modules/transporters/transporters.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import * as Joi from '@hapi/joi';
+import { DatabaseModule } from './common/database/database.module';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
-      // exclude: ['/api*'],
       serveRoot: '/public',
     }),
     ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        POSTGRES_HOST: Joi.string().required(),
+        POSTGRES_PORT: Joi.number().required(),
+        POSTGRES_USER: Joi.string().required(),
+        POSTGRES_PASSWORD: Joi.string().required(),
+        POSTGRES_DB: Joi.string().required(),
+        PORT: Joi.number(),
+      })
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '1234',
-      database: 'oneway',
-      entities: [
-          // __dirname + '/../**/*.entity{.ts,.js}',
-          User,
-          ManageCustomer,
-          ManageContract
-      ],
-      synchronize: true,
-      logging: true
-    }),
+    DatabaseModule,
     UserModule,
     ManageCustomerModule,
     ManageContractModule,

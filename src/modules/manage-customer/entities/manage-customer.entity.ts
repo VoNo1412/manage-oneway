@@ -100,7 +100,7 @@ export class ManageCustomer {
     phone: string
 
     @Column({
-        type: 'datetime',
+        type: 'date',
         default: () => 'CURRENT_TIMESTAMP',
         nullable: true
     })
