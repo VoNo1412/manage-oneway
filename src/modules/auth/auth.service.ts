@@ -2,8 +2,8 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { IUserEntity } from "../user/interface/user.interface";
 import { AuthDto } from "./dto/auth.dto";
-import { IAuth, IAuthTokenUser } from "./interface/auth.interface";
 import { JwtHelper } from "./helper/auth.helper";
+import { IAuth, IAuthTokenUser } from "./interface/auth.interface";
 
 @Injectable()
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
             email: user.email,
             password: user.password,
         }
-        const token = await this.jwtHelper.sign(payload);
+        const token = await this.jwtHelper.signToken(payload);
 
         return {
             access_token: token,

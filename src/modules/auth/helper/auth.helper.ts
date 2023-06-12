@@ -11,7 +11,7 @@ export class JwtHelper {
         private readonly userService: UserService
     ) { }
 
-    async sign(payload: any): Promise<string> {
+    async signToken(payload: any): Promise<string> {
         return this.jwtService.sign(payload, { secret: process.env.SECRET })
     }
 
