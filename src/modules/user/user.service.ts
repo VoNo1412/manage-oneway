@@ -84,4 +84,10 @@ export class UserService {
   async getUserById(id: number) {
     return await this.userRepository.findOneBy({ id });
   }
+  
+  async updateUser(updateUserDto: any) {
+    const user = await this.userRepository.findOneBy({id: updateUserDto.id});
+    const updatedUser = Object.assign(user, updateUserDto.refresh_token);
+    return await this.userRepository.save(updatedUser);
+  }
 }

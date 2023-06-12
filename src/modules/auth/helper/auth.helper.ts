@@ -11,8 +11,8 @@ export class JwtHelper {
         private readonly userService: UserService
     ) { }
 
-    async signToken(payload: any): Promise<string> {
-        return this.jwtService.sign(payload, { secret: process.env.SECRET })
+    async signToken(payload: any, expriesTime?: any): Promise<string> {
+        return this.jwtService.sign(payload, { secret: expriesTime ? process.env.SECRET_REFRESH : process.env.SECRET, expiresIn: expriesTime && expriesTime || process.env.TOKEN_EXPIRES_TIME })
     }
 
     async verifyToken(token: string): Promise<IUserEntity> {

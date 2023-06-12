@@ -26,7 +26,7 @@ export class ManageCustomerService {
     const manageCustomerBuilder = Builder<ManageCustomer>()
       .name(createManageCustomerDto.name)
       .sex(createManageCustomerDto.sex)
-      .dateOfBirth(new Date(createManageCustomerDto.dateOfBirth))
+      .dateOfBirth(createManageCustomerDto.dateOfBirth)
       .phone1(createManageCustomerDto.phone1)
       .phone2(createManageCustomerDto.phone2)
       .phone3(createManageCustomerDto.phone3)

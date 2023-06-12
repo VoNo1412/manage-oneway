@@ -1,12 +1,14 @@
-import { Controller, Post, Body, HttpStatus, Get, Query, Param } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Get, Query, Param, UseGuards } from '@nestjs/common';
 import { ManageContractService } from './manage-contract.service';
 import { CreateManageContractDto } from './dto/create-manage-contract.dto';
 import { IManageContract } from './interface/manage-contract.interface';
 import { IResponseDto } from 'src/common/response/response.dto';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/guard/auth.jwt.guard';
 @ApiTags('Manage Contract')
 @Controller('manage-contract')
+@UseGuards(AuthGuard)
 export class ManageContractController {
   constructor(private readonly manageContractService: ManageContractService) { }
 

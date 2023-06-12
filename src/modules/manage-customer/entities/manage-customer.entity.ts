@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ManageContract } from 'src/modules/manage-contract/entities/manage-contract.entity';
-import { OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { CreateDateColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Column } from 'typeorm/decorator/columns/Column';
 import { Entity } from 'typeorm/decorator/entity/Entity';
 
@@ -23,7 +23,7 @@ export class ManageCustomer {
     @ApiProperty()
     sex: boolean
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'date' })
     @ApiProperty()
     dateOfBirth: Date
 
@@ -99,13 +99,10 @@ export class ManageCustomer {
     @ApiProperty()
     phone: string
 
-    @Column({
-        type: 'date',
-        default: () => 'CURRENT_TIMESTAMP',
-        nullable: true
+    @CreateDateColumn({
+        type: 'timestamptz',
     })
-    @ApiProperty()
-    createdDate: Date
+    createdAt: Date;
 
     @OneToMany(() => ManageContract, contract => contract.customers)
     contracts: ManageContract[]

@@ -4,12 +4,15 @@ import { IUserEntity } from "../user/interface/user.interface";
 import { AuthDto } from "./dto/auth.dto";
 import { JwtHelper } from "./helper/auth.helper";
 import { IAuth, IAuthTokenUser } from "./interface/auth.interface";
+import { User } from "src/common/decorators/user.decorators";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UserService,
-        private readonly jwtHelper: JwtHelper
+        private readonly jwtHelper: JwtHelper,
+        private readonly configService: ConfigService
     ) { }
 
     async signUp(authDto: AuthDto): Promise<IUserEntity> {
@@ -23,6 +26,8 @@ export class AuthService {
             password: user.password,
         }
         const token = await this.jwtHelper.signToken(payload);
+        const refreshToken = await this.jwtHelper.signToken(payload, this.configService.get('REFRESH_TOKEN_EXPIRES_TIME'));
+        await this.userService.updateUser({...user, refresh_token: refreshToken});
 
         return {
             access_token: token,
@@ -37,4 +42,9 @@ export class AuthService {
         return user;
     }
 
+    async _getCookieWithJwtToken(@User('userId') userId: number): Promise<string> {
+        const payload = {sub: userId};
+        const token = this.jwtHelper.signToken(payload);
+        return `Authentication=${token}; HttpOnly; MAX-AGE=86400`;
+    }
 }

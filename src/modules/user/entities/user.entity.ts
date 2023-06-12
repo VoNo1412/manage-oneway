@@ -29,4 +29,8 @@ export class User {
     @ApiProperty()
     @Column({ nullable: true })
     username: string;
+
+    @ApiProperty()
+    @Column({ nullable: true })
+    refresh_token: string;
 }

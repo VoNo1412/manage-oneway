@@ -37,7 +37,7 @@ export class ManageCustomerController {
   @ApiQuery({name: 'choose', description: 'this is type customer', enum: chooseCustomer})
   async create(
     @Body() createManageCustomerDto: CreateManageCustomerDto,
-    @Query() chooseCustomer: string):
+    @Query("chooseCustomer") chooseCustomer: string):
     Promise<IResponseDto<IManageCustomer>> {
     try {
       const newCustomer: IManageCustomer = await
