@@ -18,6 +18,7 @@ import { chooseCustomer } from './entities/manage-customer.entity';
 import { CustomerSerilization } from './interceptor/manage-customer.interceptor';
 
 @ApiTags('Manage Customer')
+@UseGuards(AuthGuard)
 @Controller('manage-customer')
 export class ManageCustomerController {
   constructor(private readonly manageCustomerService: ManageCustomerService) { }

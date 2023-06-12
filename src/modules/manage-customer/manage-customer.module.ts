@@ -14,4 +14,4 @@ import { AuthModule } from '../auth/auth.module';
   providers: [ManageCustomerService],
   exports: [ManageCustomerService]
 })
-export class ManageCustomerModule {}
+export class ManageCustomerModule { }

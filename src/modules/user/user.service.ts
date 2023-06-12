@@ -80,4 +80,8 @@ export class UserService {
   async findUser(email: string) {
     return await this.userRepository.findOneBy({ email });
   }
+
+  async getUserById(id: number) {
+    return await this.userRepository.findOneBy({ id });
+  }
 }
