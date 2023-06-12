@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ManageCustomer } from 'src/modules/manage-customer/entities/manage-customer.entity';
-import { Entity, Column, ManyToMany, ManyToOne, JoinColumn } from "typeorm"
+import { Entity, Column, ManyToOne, JoinColumn } from "typeorm"
 import { PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'manage-contract' })
@@ -18,32 +18,32 @@ export class ManageContract {
     )
     codeNumber: string;
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     nameBuyer: string;
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     nameBenifit: string;
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     valueContract: string;
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     effectDate: string;
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     paymentYear: string;
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     cycle: string;
 
     @Column({
-        type: 'datetime',
+        type: 'date',
         default: () => 'CURRENT_TIMESTAMP',
         nullable: true
     })

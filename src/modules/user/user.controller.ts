@@ -1,15 +1,13 @@
 import { Body, Controller, Get, Param, Post, Query, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiBody, ApiConsumes, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { join } from 'path';
 import { IUserEntity } from './interface/user.interface';
-import { AuthGuard } from '@nestjs/passport';
 import { QueryUserDto } from './dto/query-user.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import * as fs from 'fs'
-import { UserDecorator } from 'src/common/decorators/user.decorators';
+import { User } from 'src/common/decorators/user.decorators';
 
 
 @ApiTags('User')
@@ -28,7 +26,7 @@ export class UserController {
   @Post('sendEmail')
   async sendEmail(
     @Query() userDto: QueryUserDto,
-    @UserDecorator() user: IUserEntity
+    @User() user: IUserEntity
   ) {
     return await this.userService.sendEmail(user, userDto.fileIds);
   }

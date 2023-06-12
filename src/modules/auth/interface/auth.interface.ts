@@ -1,5 +1,11 @@
-export class IPayloadAuth {
+import { IUserEntity } from "src/modules/user/interface/user.interface";
+
+export interface IAuth {
     email: string;
-    username: string;
-    id: number;
+    password: string;
+}
+
+export interface IAuthTokenUser {
+    access_token: string;
+    user: IUserEntity
 }

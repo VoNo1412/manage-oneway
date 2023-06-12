@@ -71,7 +71,7 @@ export class ManageCustomer {
     @ApiProperty()
     code: string
 
-    @Column()
+    @Column({ nullable: true })
     @ApiProperty()
     resource: string
 
@@ -100,7 +100,7 @@ export class ManageCustomer {
     phone: string
 
     @Column({
-        type: 'datetime',
+        type: 'date',
         default: () => 'CURRENT_TIMESTAMP',
         nullable: true
     })

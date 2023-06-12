@@ -1,28 +1,29 @@
 import { Module } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { UserModule } from "../user/user.module";
-import { PassportModule } from "@nestjs/passport";
 import { AuthController } from "./auth.controller";
-import { LocalStrategy } from "./strategy/local.strategy";
+import { PassportModule } from "@nestjs/passport";
+import { LocalStrategy } from "./strategy/auth.local.strategy";
+import { JwtStrategy } from "./strategy/auth.jwt.strategy";
+import { JwtHelper } from "./helper/auth.helper";
 import { JwtModule } from "@nestjs/jwt";
-import { ConfigModule } from "@nestjs/config";
-import { jwtSecret } from "./constants/secretjwt.constant";
-import { JwtStrategy } from "./strategy/jwt.strategy";
-import { JwtHelper } from "./helper/jwt.helper";
+import { AuthGuard } from "./guard/auth.jwt.guard";
 
 @Module({
-    controllers: [AuthController],
     imports: [
         UserModule,
-        ConfigModule,
-        PassportModule,
+        PassportModule.register({ defaultStrategy: 'local' }),
         JwtModule.register({
             global: true,
-            secret: jwtSecret.secret,
-            signOptions: { expiresIn: `1d` }
+            secret: process.env.SECRET,
+            signOptions: {
+                expiresIn: '3600s'
+            }
         })
     ],
-    providers: [AuthService, LocalStrategy, JwtStrategy, JwtHelper],
-    exports: [AuthService, JwtHelper]
+    controllers: [AuthController],
+    providers: [AuthService, LocalStrategy, JwtStrategy, JwtHelper, AuthGuard],
+    exports: [AuthService, JwtHelper, AuthGuard]
 })
+
 export class AuthModule { }

@@ -1,9 +1,9 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { AuthDto } from "./dto/auth.dto";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { IUserEntity } from "../user/interface/user.interface";
-import { IResponseDto } from "src/common/response/response.dto";
-import { JwtHelper } from "./helper/jwt.helper";
+import { AuthDto } from "./dto/auth.dto";
+import { IAuth, IAuthTokenUser } from "./interface/auth.interface";
+import { JwtHelper } from "./helper/auth.helper";
 
 @Injectable()
 export class AuthService {
@@ -12,27 +12,29 @@ export class AuthService {
         private readonly jwtHelper: JwtHelper
     ) { }
 
-    async validatedUser(email: string, password: string): Promise<IUserEntity> {
-        const user = await this.userService.findUser(email);
+    async signUp(authDto: AuthDto): Promise<IUserEntity> {
+        return await this.userService.createUser(authDto)
+    }
 
-        if (!user || !user.verifyPassword(password, user.password)) {
-            throw new UnauthorizedException();
+    async login(user: IUserEntity): Promise<IAuthTokenUser> {
+        const payload = {
+            id: user.id,
+            email: user.email,
+            password: user.password,
         }
+        const token = await this.jwtHelper.sign(payload);
 
+        return {
+            access_token: token,
+            user
+        }
+    }
+
+    async validateUser(authLogin: IAuth): Promise<IUserEntity> {
+        const user = await this.userService.findUser(authLogin.email);
+        if (!user || !(await user.verifyPassword(authLogin.password, user.password))) 
+            throw new HttpException('Please check email or password!', HttpStatus.NOT_FOUND);
         return user;
     }
 
-    async signIn(login: AuthDto): Promise<any> {
-        const user = await this.userService.findUser(login.email);
-        const { id, username, email } = user;
-        const token = await this.jwtHelper.signToken({ id, username, email });
-        return {
-            accessToken: token,
-            user
-        };
-    }
-
-    async signUp(signUp: AuthDto) {
-        return await this.userService.createUser(signUp);
-    }
 }
