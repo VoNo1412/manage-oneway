@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus, Get, Query, Param, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Get, Query, Param, UseGuards, Inject, OnModuleInit } from '@nestjs/common';
 import { ManageContractService } from './manage-contract.service';
 import { CreateManageContractDto } from './dto/create-manage-contract.dto';
 import { IManageContract } from './interface/manage-contract.interface';
@@ -40,12 +40,13 @@ export class ManageContractController {
   Promise<IResponseDto<IPaginationDto>> {
     try {
       const contracts: IPaginationDto = await this.manageContractService.findAll(pageOption);
-
-      return {
-        status: HttpStatus.OK,
-        data: contracts,
-        message: 'get contracts success!'
-      }
+      console.log(contracts);
+      return contracts;
+      // return {
+      //   status: HttpStatus.OK,
+      //   data: contracts,
+      //   message: 'get contracts success!'
+      // }
     } catch (error) {
       return {
         status: HttpStatus.BAD_REQUEST,

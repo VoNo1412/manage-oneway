@@ -3,19 +3,28 @@ import { ValidationPipe } from '@nestjs/common/pipes';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { KafkaOptions, MicroserviceOptions } from '@nestjs/microservices';
+import * as express from 'express';
+import * as http from 'http';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import { kafkaOptions } from './common/config/configKafka';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api')
-
+  const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, kafkaOptions as KafkaOptions);
+  await microservice.listen();
+  const server = express();
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
   const config = new DocumentBuilder()
     .setTitle('Manage Example API')
     .setDescription('The Manage API description')
     .setVersion('1.0')
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  await app.listen(3000);
+  app.setGlobalPrefix('api')
+  await app.init();
+  http.createServer(server).listen(4000);
 }
 bootstrap();
