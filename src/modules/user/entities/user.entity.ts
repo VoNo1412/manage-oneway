@@ -9,7 +9,7 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({unique: true})
     @ApiProperty()
     email: string;
 

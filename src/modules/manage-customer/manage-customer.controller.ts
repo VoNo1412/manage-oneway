@@ -57,7 +57,6 @@ export class ManageCustomerController {
     }
   }
 
-  @UseGuards(AuthGuard)
   @Get()
   @UseInterceptors(CustomerSerilization)
   async search(
@@ -66,7 +65,7 @@ export class ManageCustomerController {
   ):
     Promise<IResponseDto<IPaginationDto>> {
     try {
-      const {customers}: IPaginationDto =
+      const customers: IPaginationDto =
         await this.manageCustomerService.findAll(pageOption);
 
       return {

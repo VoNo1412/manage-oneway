@@ -90,4 +90,12 @@ export class UserService {
     const updatedUser = Object.assign(user, updateUserDto.refresh_token);
     return await this.userRepository.save(updatedUser);
   }
+
+  async getUserByEmail(email: string) {
+    try {
+      return await this.userRepository.findOneBy({email});
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }

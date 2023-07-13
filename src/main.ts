@@ -10,8 +10,6 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import { kafkaOptions } from './common/config/configKafka';
 
 async function bootstrap() {
-  const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, kafkaOptions as KafkaOptions);
-  await microservice.listen();
   const server = express();
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
   const config = new DocumentBuilder()
@@ -25,6 +23,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix('api')
   await app.init();
-  http.createServer(server).listen(4000);
+  http.createServer(server).listen(3000);
 }
 bootstrap();

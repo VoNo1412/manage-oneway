@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Builder } from 'builder-pattern';
 import { IPaginationDto } from 'src/common/pagination/pagination.dto';
-import { Repository } from 'typeorm';
+import { FindOptionsOrderValue, Repository } from 'typeorm';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { chooseCustomer, ManageCustomer } from './entities/manage-customer.entity';
 import { IManageCustomer } from './interface/manage-customer.interface';
@@ -54,20 +54,18 @@ export class ManageCustomerService {
   }
 
   async findAll(pageOption: IPaginationDto): Promise<IPaginationDto> {
-    const total: number = await this.manageCustomerRepository.count({});
-    total < pageOption.size ? pageOption.page = 1 : pageOption.page
-    const customers: IManageCustomer[] =
-      await this.manageCustomerRepository.find({
+    const [customers, count] =
+      await this.manageCustomerRepository.findAndCount({
         take: pageOption.size,
         skip: pageOption.offset,
-        order: { id: -1 },
+        order: { id: pageOption.sort as FindOptionsOrderValue },
       })
 
     return {
       size: pageOption.size,
       page: pageOption.page,
       offset: pageOption.offset,
-      total: total,
+      total: count,
       customers
     };
   }
