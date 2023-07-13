@@ -9,8 +9,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './common/database/database.module';
-import { JwtHelper } from './modules/auth/helper/jwt.helper';
 import { TelegramModule } from './modules/telegram/telegram.module';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './common/exception/exception.response';
 
 @Module({
   imports: [
@@ -36,6 +37,11 @@ import { TelegramModule } from './modules/telegram/telegram.module';
     AuthModule,
     TelegramModule
   ],
-  providers: [JwtHelper]
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter
+    }
+  ]
 })
 export class AppModule { }
