@@ -54,7 +54,8 @@ export class ManageCustomerService {
   }
 
   async findAll(pageOption: IPaginationDto): Promise<IPaginationDto> {
-    const [customers, count] =
+    try {
+      const [customers, count] =
       await this.manageCustomerRepository.findAndCount({
         take: pageOption.size,
         skip: pageOption.offset,
@@ -68,6 +69,9 @@ export class ManageCustomerService {
       total: count,
       customers
     };
+    } catch (error) {
+      throw new HttpException('Not get data something error', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async importFile(customers: IimportManageCustomerDtoSpecial): Promise<any> {

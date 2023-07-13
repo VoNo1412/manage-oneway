@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { ValidationPipe } from '@nestjs/common/pipes';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { KafkaOptions, MicroserviceOptions } from '@nestjs/microservices';
@@ -8,6 +8,7 @@ import * as express from 'express';
 import * as http from 'http';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { kafkaOptions } from './common/config/configKafka';
+import { ClassSerializerInterceptor } from '@nestjs/common';
 
 async function bootstrap() {
   const server = express();
@@ -21,6 +22,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(
+    app.get(Reflector))
+  );
   app.setGlobalPrefix('api')
   await app.init();
   http.createServer(server).listen(3000);

@@ -10,8 +10,9 @@ import { join } from 'path';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './common/database/database.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/exception/exception.response';
+import { SerializationCommon } from './common/serialization/serialization.common';
 
 @Module({
   imports: [
@@ -41,6 +42,10 @@ import { HttpExceptionFilter } from './common/exception/exception.response';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SerializationCommon
     }
   ]
 })

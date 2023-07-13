@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 import { ManageContract } from 'src/modules/manage-contract/entities/manage-contract.entity';
 import { CreateDateColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Column } from 'typeorm/decorator/columns/Column';
@@ -9,14 +10,14 @@ export enum chooseCustomer {
     employeerEnterprise = 'employeerEnterprise',
     enterprise = 'enterprise'
 }
-
 @Entity({ name: 'manage-customer' })
 export class ManageCustomer {
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    @ApiProperty()
+    @ApiProperty() 
+    @Expose()
     name: string
 
     @Column({ nullable: true })

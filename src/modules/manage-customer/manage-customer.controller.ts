@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile, Delete, Param, ParseArrayPipe, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseInterceptors, UploadedFile, Delete, Param, ParseArrayPipe, Res, UseGuards, SerializeOptions, ClassSerializerInterceptor } from '@nestjs/common';
 import { ManageCustomerService } from './manage-customer.service';
 import { CreateManageCustomerDto } from './dto/create-manage-customer.dto';
 import { HttpStatus } from '@nestjs/common/enums';
@@ -58,7 +58,11 @@ export class ManageCustomerController {
   }
 
   @Get()
-  @UseInterceptors(CustomerSerilization)
+  // @UseInterceptors(CustomerSerilization)
+  // @UseInterceptors(ClassSerializerInterceptor)
+  // @SerializeOptions({
+  //   strategy: 'excludeAll'
+  // })
   async search(
     @Query() pageOption: IPaginationDto,
     @User() user: IUserEntity
