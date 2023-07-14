@@ -58,11 +58,7 @@ export class ManageCustomerController {
   }
 
   @Get()
-  // @UseInterceptors(CustomerSerilization)
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // @SerializeOptions({
-  //   strategy: 'excludeAll'
-  // })
+  @UseInterceptors(CustomerSerilization)
   async search(
     @Query() pageOption: IPaginationDto,
     @User() user: IUserEntity

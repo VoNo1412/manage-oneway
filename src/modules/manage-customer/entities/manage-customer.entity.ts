@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { ManageContract } from 'src/modules/manage-contract/entities/manage-contract.entity';
 import { CreateDateColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Column } from 'typeorm/decorator/columns/Column';

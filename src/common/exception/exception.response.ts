@@ -9,6 +9,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const status = typeof exception.getStatus === 'function' ? exception.getStatus() : exception.response.statusCode;
         const message = typeof exception.message === 'object' ? exception.message : exception.response.message;
         console.error('Exception thrown', exception);
-        response.status(status).json({ message, statusCode: status, time: Date.now() })
+        response.status(status).json({ message, data: null, statusCode: status })
     }
 }

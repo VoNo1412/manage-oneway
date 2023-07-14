@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { ManageCustomerModule } from './modules/manage-customer/manage-customer.module';
@@ -12,7 +12,6 @@ import { DatabaseModule } from './common/database/database.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/exception/exception.response';
-import { SerializationCommon } from './common/serialization/serialization.common';
 
 @Module({
   imports: [
@@ -45,7 +44,7 @@ import { SerializationCommon } from './common/serialization/serialization.common
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: SerializationCommon
+      useClass: ClassSerializerInterceptor
     }
   ]
 })
