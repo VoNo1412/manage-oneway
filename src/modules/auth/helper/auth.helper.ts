@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
-import { IUserEntity } from "src/modules/user/interface/user.interface";
-import { UserService } from "src/modules/user/user.service";
 import { Request } from "express";
+import { UserService } from "../../user/user.service";
+import { IUserEntity } from "../../user/interface/user.interface";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()

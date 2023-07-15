@@ -7,7 +7,7 @@ import { IUserEntity } from './interface/user.interface';
 import { QueryUserDto } from './dto/query-user.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { User } from 'src/common/decorators/user.decorators';
+import { User } from '../../common/decorators/user.decorators';
 
 
 @ApiTags('User')

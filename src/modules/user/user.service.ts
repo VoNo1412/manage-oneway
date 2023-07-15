@@ -8,7 +8,6 @@ import { Repository } from 'typeorm/repository/Repository';
 import { Builder } from 'builder-pattern';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import * as process from 'process';
-import { imageDev } from 'src/common/constants/image.constants';
 import { join } from 'path';
 
 @Injectable()
@@ -52,7 +51,7 @@ export class UserService {
       template: './welcome',
       context: {
         name: "user.username",
-        imageUrl: imageDev,
+        // imageUrl: imageDev,
         heros: ['yasuo', 'zed', 'sherlock']
       },
       html: '<h1>How to learn everything?</h1>',

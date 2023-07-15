@@ -4,7 +4,7 @@ import { IUserEntity } from "../user/interface/user.interface";
 import { AuthDto } from "./dto/auth.dto";
 import { JwtHelper } from "./helper/auth.helper";
 import { IAuth, IAuthTokenUser } from "./interface/auth.interface";
-import { User } from "src/common/decorators/user.decorators";
+import { User } from "../../common/decorators/user.decorators";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
