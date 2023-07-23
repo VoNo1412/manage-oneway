@@ -18,8 +18,8 @@ export class JwtHelper {
     }
 
     async verifyToken(token: string): Promise<IUserEntity> {
-        const data = await this.jwtService.verify(token, { secret: this.configService.get("SECRET") })
-        return this.userService.findUser(data.id);
+        const user = await this.jwtService.verify(token, { secret: this.configService.get("SECRET") })
+        return this.userService.getUserById(user.id);
     }
 
     extractTokenFromHeader(request: Request): string {

@@ -4,13 +4,14 @@ import { PrimaryGeneratedColumn } from "typeorm/decorator/columns/PrimaryGenerat
 import { Entity } from "typeorm/decorator/entity/Entity";
 import * as bcrypt from 'bcrypt';
 import { PostEntity } from "../../post/entity/post.entity";
+import { Role } from "src/common/interface/role.enum";
 
 @Entity({ name: 'user' })
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({unique: true})
+    @Column({ unique: true })
     @ApiProperty()
     email: string;
 
@@ -37,4 +38,12 @@ export class User {
     @ApiProperty()
     @Column({ nullable: true })
     refresh_token: string;
+
+    @ApiProperty()
+    @Column('enum', { enum: Role, default: Role.User })
+    role: Role;
+
+    @ApiProperty()
+    @Column('text', { array: true, default: [] })
+    permissions: string[]
 }

@@ -22,6 +22,8 @@ export class UserService {
       .username(createUserDto?.username)
       .email(createUserDto.email)
       .password(createUserDto.password)
+      .role(createUserDto.role)
+      .refresh_token(createUserDto.refresh_token)
       .build();
 
     const checkExistUser = await this.findUser(userBuilder.email)
