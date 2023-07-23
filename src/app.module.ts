@@ -12,6 +12,7 @@ import { DatabaseModule } from './common/database/database.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/exception/exception.response';
+import { PostModule } from './modules/post/post.module';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { HttpExceptionFilter } from './common/exception/exception.response';
     ManageContractModule,
     TransporterModule,
     AuthModule,
-    TelegramModule
+    TelegramModule,
+    PostModule
   ],
   providers: [
     {

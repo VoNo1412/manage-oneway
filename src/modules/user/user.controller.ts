@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -91,5 +91,12 @@ export class UserController {
     }
   }
 
-  
+  @Get('get_post_by_user') 
+  async getPostsByUser() {
+    try {
+      return this.userService.getPostsByUser();
+    } catch (error) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+  }
 }

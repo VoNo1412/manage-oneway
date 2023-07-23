@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ManageContract } from 'src/modules/manage-contract/entities/manage-contract.entity';
-import { ManageCustomer } from 'src/modules/manage-customer/entities/manage-customer.entity';
-import { User } from 'src/modules/user/entities/user.entity';
 
 @Module({
     imports: [
@@ -19,9 +16,7 @@ import { User } from 'src/modules/user/entities/user.entity';
                     password: configService.get('POSTGRES_PASSWORD'),
                     database: configService.get('POSTGRES_DB'),
                     entities: [
-                        User,
-                        ManageContract,
-                        ManageCustomer
+                        'dist/modules/**/*.entity.js'
                     ],
                     synchronize: true,
                 })

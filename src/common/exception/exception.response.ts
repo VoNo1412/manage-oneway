@@ -6,9 +6,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     catch(exception: any, host: ArgumentsHost) {
         const context = host.switchToHttp();
         const response = context.getResponse<Response>();
-        const status = typeof exception.getStatus === 'function' ? exception.getStatus() : exception.response.statusCode;
-        const message = typeof exception.message === 'object' ? exception.message : exception.response.message;
+        console.log("this is exception: ", exception);
+        const status = typeof exception?.getStatus === 'function' ? exception?.getStatus() : exception?.response?.statusCode || exception.message;
+        const message = exception.message;
         console.error('Exception thrown', exception);
-        response.status(status).json({ message, data: null, statusCode: status })
+        response.status(status).json({ message, data: null, statusCode: status, exception })
     }
 }

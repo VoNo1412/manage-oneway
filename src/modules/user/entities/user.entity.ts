@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BeforeInsert, Column } from "typeorm";
+import { BeforeInsert, Column, OneToMany } from "typeorm";
 import { PrimaryGeneratedColumn } from "typeorm/decorator/columns/PrimaryGeneratedColumn";
 import { Entity } from "typeorm/decorator/entity/Entity";
 import * as bcrypt from 'bcrypt';
+import { PostEntity } from "../../post/entity/post.entity";
 
 @Entity({ name: 'user' })
 export class User {
@@ -29,6 +30,9 @@ export class User {
     @ApiProperty()
     @Column({ nullable: true })
     username: string;
+
+    @OneToMany(() => PostEntity, post => post.author)
+    posts: PostEntity[];
 
     @ApiProperty()
     @Column({ nullable: true })

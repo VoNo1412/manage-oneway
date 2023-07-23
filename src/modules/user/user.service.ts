@@ -97,4 +97,8 @@ export class UserService {
       throw new Error(error);
     }
   }
+
+  async getPostsByUser() {
+    return this.userRepository.find({relations: ['posts']});
+  }
 }
