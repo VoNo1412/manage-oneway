@@ -12,4 +12,8 @@ export class PostService {
     async getPosts() {
         return this.postRepository.find({ relations: ['author'] });
     }
+
+    async deletePost(id: number) {
+        return this.postRepository.delete(id)
+    }
 }
